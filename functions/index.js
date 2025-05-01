@@ -33,7 +33,7 @@ const {reportController} = require('./controller/reportController');
 const {shareController} = require('./controller/shareController');
 const {spendingController} = require('./controller/spendingController');
 const {stepController} = require('./controller/stepController');
-const {stockInvesHisController} = require('./controller/stockInvesHisController');
+const {stockInvestHisController} = require('./controller/stockInvestHisController');
 const {taskController} = require('./controller/taskController');
 
 
@@ -90,10 +90,10 @@ app.post('/get-step/:id', stepController.get);
 app.put('/update-step/:id', stepController.update);
 app.delete('/delete-step/:id', stepController.delete);
 //stock invest history
-app.post('/add-stockInvesHis', stockInvesHisController.add);
-app.post('/get-stockInvesHis/:id', stockInvesHisController.get);
-app.put('/update-stockInvesHis/:id', stockInvesHisController.update);
-app.delete('/delete-stockInvesHis/:id', stockInvesHisController.delete);
+app.post('/add-stockInvestHis', stockInvestHisController.add);
+app.post('/get-stockInvestHis/:id', stockInvestHisController.get);
+app.put('/update-stockInvestHis/:id', stockInvestHisController.update);
+app.delete('/delete-stockInvestHis/:id', stockInvestHisController.delete);
 //task
 app.post('/add-task', taskController.add);
 app.post('/get-task/:id', taskController.get);

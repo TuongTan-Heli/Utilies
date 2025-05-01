@@ -1,16 +1,16 @@
 const { db } = require('../config/firebase');
-const stockInvesHisCollection = db.collection('StockInvesHis');
-module.exports.stockInvesHisController = {
+const stockInvestHisCollection = db.collection('StockInvestHis');
+module.exports.stockInvestHisController = {
 
     async add(req, res) {
         const { User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit } = req.body;
         try {
-            const stockInvesHisInfo = {
+            const stockInvestHisInfo = {
                 User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit
             };
             //add validation here;
 
-            await stockInvesHisCollection.add(stockInvesHisInfo);
+            await stockInvestHisCollection.add(stockInvestHisInfo);
 
             res.status(200).send({
                 status: 'Success',
@@ -24,12 +24,12 @@ module.exports.stockInvesHisController = {
     async get(req, res) {
         try {
             const { id } = req.params;
-            const stockInvesHis = (await stockInvesHisCollection.doc(id).get()).data();
+            const stockInvestHis = (await stockInvestHisCollection.doc(id).get()).data();
 
             res.status(200).send({
                 status: 'Success',
                 message: 'Success',
-                data: stockInvesHis
+                data: stockInvestHis
             });
         } catch (error) {
             res.status(500).json(error.message);
@@ -39,11 +39,11 @@ module.exports.stockInvesHisController = {
     async update(req, res) {
         const { User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit } = req.body;
         try {
-            const newStockInvesHisInfo = {
+            const newStockInvestHisInfo = {
                 User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit
             };
             const { id } = req.params;
-            await stockInvesHisCollection.doc(id).update(newStockInvesHisInfo);
+            await stockInvestHisCollection.doc(id).update(newStockInvestHisInfo);
             res.status(200).send({
                 status: 'Success',
                 message: 'Success'
@@ -56,7 +56,7 @@ module.exports.stockInvesHisController = {
     async delete(req, res) {
         try {
             const { id } = req.params;
-            await stockInvesHisCollection.doc(id).delete();
+            await stockInvestHisCollection.doc(id).delete();
 
             res.status(200).send({
                 status: 'Success',
