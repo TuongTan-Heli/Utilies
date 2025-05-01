@@ -5,23 +5,16 @@ module.exports.userController = {
   //Register user
   async registerUser(req, res) {
     
-    const { Email, Password, UserName } = req.body;
+    const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role } = req.body;
     try {
-      const userInfo = {
-        // id: userCollection.doc(),
-        Email,
-        Password,
-        UserName
-      };
+      const userInfo = { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role };
       //add validation here;
 
-      const docRef = await userCollection.add(userInfo);
+      await userCollection.add(userInfo);
 
       res.status(200).send({
-        id: docRef.id,
-        status: 'success',
-        message: 'Register user successfully',
-        data: userInfo,
+        status: 'Success',
+        message: 'Success',
       });
     } catch (error) {
       res.status(500).json("this is error:"+ error.message + error);
@@ -53,8 +46,8 @@ module.exports.userController = {
         };
 
         res.status(200).send({
-          status: 'success',
-          message: 'Login successfull',
+          status: 'Success',
+          message: 'Success',
           data: userInfo,
         });
       }
@@ -74,8 +67,8 @@ module.exports.userController = {
         user.Password = NewPassword;
         await userCollection.doc(id).update(user);
         res.status(200).send({
-          status: 'success',
-          message: 'update user successfully'
+          status: 'Success',
+          message: 'Success'
         });
       } else {
         res.status(400).json("Current password does not match")
@@ -93,16 +86,14 @@ module.exports.userController = {
 
       const userInfo = {
         Email: Email,
-        Password: user.Password,
         UserName: UserName
       };
 
       await userCollection.doc(id).update(userInfo);
 
       res.status(200).send({
-        status: 'success',
-        message: 'update user successfully',
-        data: userInfo
+        status: 'Success',
+        message: 'Success'
       });
     } catch (error) {
       res.status(500).json(error.message);
@@ -115,8 +106,8 @@ module.exports.userController = {
       const user = await userCollection.doc(id).delete();
 
       res.status(200).send({
-        status: 'success',
-        message: 'delete user successfully'
+        status: 'Success',
+        message: 'Success'
       });
     } catch (error) {
       res.status(500).json(error.message);
