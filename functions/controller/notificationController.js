@@ -42,6 +42,7 @@ module.exports.notificationController = {
             const newNotificationInfo = {
                 Country, Exrate, Name
             };
+            const { id } = req.params;
             await notificationCollection.doc(id).update(newNotificationInfo);
             res.status(200).send({
                 status: 'Success',

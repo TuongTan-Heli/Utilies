@@ -42,6 +42,7 @@ module.exports.stepController = {
             const newStepInfo = {
                 Action, Ingredients, Note, Recipe
             };
+            const { id } = req.params;
             await stepCollection.doc(id).update(newStepInfo);
             res.status(200).send({
                 status: 'Success',

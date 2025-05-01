@@ -42,6 +42,7 @@ module.exports.recipeController = {
             const newRecipeInfo = {
                 Name, Description, Image, Ingredients, Steps, Share, User
             };
+            const { id } = req.params;
             await recipeCollection.doc(id).update(newRecipeInfo);
             res.status(200).send({
                 status: 'Success',

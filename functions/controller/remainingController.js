@@ -42,6 +42,7 @@ module.exports.remainingController = {
             const newRemainingInfo = {
                 Amount, Currency, Date, Share, User
             };
+            const { id } = req.params;
             await remainingCollection.doc(id).update(newRemainingInfo);
             res.status(200).send({
                 status: 'Success',

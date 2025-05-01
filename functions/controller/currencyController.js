@@ -39,6 +39,7 @@ module.exports.currencyController = {
     async update(req, res) {
         const { Country, Exrate, Name } = req.body;
         try {
+            const { id } = req.params;
             const newCurrencyInfo = {
                 Country, Exrate, Name
             };

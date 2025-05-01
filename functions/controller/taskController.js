@@ -42,6 +42,7 @@ module.exports.taskController = {
             const newTaskInfo = {
                 User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share 
             };
+            const { id } = req.params;
             await taskCollection.doc(id).update(newTaskInfo);
             res.status(200).send({
                 status: 'Success',

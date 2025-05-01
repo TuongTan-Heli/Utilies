@@ -42,6 +42,7 @@ module.exports.spendingController = {
             const newSpendingInfo = {
                 User, Type, Share, Currency, Date, Note, Special
             };
+            const { id } = req.params;
             await spendingCollection.doc(id).update(newSpendingInfo);
             res.status(200).send({
                 status: 'Success',

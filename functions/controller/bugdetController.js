@@ -43,6 +43,7 @@ module.exports.budgetController = {
             const newBudgetInfo = {
                 Amount, Currency, From, To, Share, User
             };
+            const { id } = req.params;
             await budgetCollection.doc(id).update(newBudgetInfo);
             res.status(200).send({
                 status: 'Success',

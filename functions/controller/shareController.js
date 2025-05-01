@@ -42,6 +42,7 @@ module.exports.shareController = {
             const newShareInfo = {
                 Owner, Role, SharedUser, Type, TypeId
             };
+            const { id } = req.params;
             await shareCollection.doc(id).update(newShareInfo);
             res.status(200).send({
                 status: 'Success',

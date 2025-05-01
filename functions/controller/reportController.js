@@ -42,6 +42,7 @@ module.exports.reportController = {
             const newReportInfo = {
                 User, From, To, Excel, Currency, Share
             };
+            const { id } = req.params;
             await reportCollection.doc(id).update(newReportInfo);
             res.status(200).send({
                 status: 'Success',

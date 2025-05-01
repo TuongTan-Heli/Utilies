@@ -42,6 +42,7 @@ module.exports.stockInvesHisController = {
             const newStockInvesHisInfo = {
                 User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit
             };
+            const { id } = req.params;
             await stockInvesHisCollection.doc(id).update(newStockInvesHisInfo);
             res.status(200).send({
                 status: 'Success',
