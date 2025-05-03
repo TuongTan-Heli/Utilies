@@ -8,7 +8,6 @@
  */
 
 const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
@@ -39,7 +38,7 @@ const {taskController} = require('./controller/taskController');
 
 
 //user
-app.post('/register-user', userController.registerUser);
+app.post('/register', userController.register);
 app.post('/login', userController.login);
 app.put('/change-password/:id', userController.changePassword);
 app.delete('/delete-user/:id', userController.deleteUser);

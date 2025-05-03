@@ -7,6 +7,5 @@ admin.initializeApp({
   databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
 });
 const db = getFirestore('utilies');
-
-console.log(db.databaseId);
+db.settings({ignoreUndefinedProperties: true});
 module.exports = {admin, db};
