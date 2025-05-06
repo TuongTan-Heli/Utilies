@@ -17,14 +17,12 @@ const {onRequest} = require("firebase-functions/v2/https");
 //   response.send("Hello from Firebase!");
 // });
 
-
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 
 const {userController} = require('./controller/userController');
 const {currencyController} = require('./controller/currencyController');
-const {loginSessionController} = require('./controller/loginSessionController');
 const {notificationController} = require('./controller/notificationController');
 const {recipeController} = require('./controller/recipeController');
 const {remainingController} = require('./controller/remainingController');
@@ -48,11 +46,6 @@ app.post('/add-currency', currencyController.add);
 app.post('/get-currency/:id', currencyController.get);
 app.put('/update-currency/:id', currencyController.update);
 app.delete('/delete-currency/:id', currencyController.delete);
-//loginSession
-// app.post('/add-loginSession', loginSessionController.add);
-// app.post('/get/:id', loginSessionController.get);
-// app.put('/update/:id', loginSessionController.update);
-// app.delete('/delete-user/:id', loginSessionController.delete);
 //notification
 app.post('/add-notification', notificationController.add);
 app.post('/get-notification/:id', notificationController.get);

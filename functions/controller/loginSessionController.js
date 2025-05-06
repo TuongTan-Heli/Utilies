@@ -45,6 +45,7 @@ module.exports.loginSessionController = {
         userData = (await userCollection.doc(userId).get()).data();
         return { userData, sessionInfo };
     },
+    
     async generateNewSessionToken(userId) {
         sessionSnapshot = (await this.getSessionTokenSnapshotByUser(userId)).docs;
 

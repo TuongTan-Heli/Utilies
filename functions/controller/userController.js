@@ -1,14 +1,14 @@
 const { db } = require('../config/firebase');
 const userCollection = db.collection('User');
 const { loginSessionController } = require('./loginSessionController');
+const bcrypt = require('bcrypt');
 module.exports.userController = {
-
-  //Register user
+  
   async register(req, res) {
-
     const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role } = req.body;
     try {
-      const userInfo = { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role, DateCreated: new Date() };
+      const hashedPassword = await hashPassword(Password);
+      const userInfo = { Email, "Password": hashedPassword, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role, DateCreated: new Date() };
       //add validation here;
 
       await userCollection.add(userInfo);
@@ -18,7 +18,7 @@ module.exports.userController = {
         message: 'Success',
       });
     } catch (error) {
-      res.status(500).json("this is error:" + error.message + error);
+      res.status(500).json(error.message);
     }
   },
 
@@ -27,39 +27,41 @@ module.exports.userController = {
     let sessionToken = rawSessionToken ?? "";
     let userData = {};
     let userSnapshot;
-  
+
     try {
       // Check login via session token
       if (sessionToken) {
         const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
         userData = sessionData.userData;
         sessionToken = sessionData.sessionInfo;
-  
+
         if (!userData) {
           return res.status(404).json("User not found or session expired");
         }
       }
-  
+
       // Check login via username/password
       if (UserName && Password) {
+        let isPasswordValid = false;
         userSnapshot = await userCollection
           .where("UserName", "==", UserName)
-          .where("Password", "==", Password) // Consider hashing for security
-          .limit(1)
           .get();
-  
-        if (userSnapshot.empty) {
-          return res.status(404).json("User not found or wrong password");
+
+        for (const user of userSnapshot.docs) {
+          userData = user.data();
+          isPasswordValid = await bcrypt.compare(Password, userData.Password);
+          if (isPasswordValid) {
+            sessionToken = await loginSessionController.generateNewSessionToken(user.id);
+          }
         }
-  
-        const userDoc = userSnapshot.docs[0];
-        userData = userDoc.data();
-        sessionToken = await loginSessionController.generateNewSessionToken(userDoc.id);
+        if (!isPasswordValid) {
+            return res.status(404).json("User not found or wrong password");
+        }
       }
-  
+
       // Sanitize user data
-      if (userData.Password) delete userData.Password;
-  
+       delete userData.Password;
+
       return res.status(200).json({
         status: 'Success',
         message: 'Login successful',
@@ -67,12 +69,11 @@ module.exports.userController = {
         sessionToken,
         // apiKey: getApiKey(userDoc.id) // Optional
       });
-  
+
     } catch (error) {
       return res.status(500).json({ status: 'Error', message: error.message });
     }
   },
-  
 
   async changePassword(req, res) {
     const { OldPassword, NewPassword } = req.body;
@@ -80,9 +81,10 @@ module.exports.userController = {
       // const Password = NewPassword;
       const { id } = req.params;
       const user = (await userCollection.doc(id).get()).data();
+      const isPasswordValid = await bcrypt.compare(OldPassword, user.Password);
 
-      if (user.Password == OldPassword) {
-        user.Password = NewPassword;
+      if (isPasswordValid) {
+        user.Password = await hashPassword(NewPassword);
         await userCollection.doc(id).update(user);
         res.status(200).send({
           status: 'Success',
@@ -121,7 +123,8 @@ module.exports.userController = {
   async deleteUser(req, res) {
     try {
       const { id } = req.params;
-      const user = await userCollection.doc(id).delete();
+      await userCollection.doc(id).delete();
+      //handle delete everything related to user
 
       res.status(200).send({
         status: 'Success',
@@ -130,6 +133,9 @@ module.exports.userController = {
     } catch (error) {
       res.status(500).json(error.message);
     }
-  }
+  },
+}
 
+async function hashPassword(password) {
+  return await bcrypt.hash(password, 10);
 }
