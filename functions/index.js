@@ -7,20 +7,12 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const {onRequest} = require("firebase-functions/v2/https");
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 
+const {roleGuard} = require('./utils/roleGuard');
+const {apiKeyController} = require('./controller/apiKeyController');
 const {userController} = require('./controller/userController');
 const {currencyController} = require('./controller/currencyController');
 const {notificationController} = require('./controller/notificationController');
@@ -34,13 +26,15 @@ const {stockInvestHisController} = require('./controller/stockInvestHisControlle
 const {taskController} = require('./controller/taskController');
 
 
+app.use(apiKeyController.validateApiKey); 
+
 
 //user
-app.post('/register', userController.register);
-app.post('/login', userController.login);
-app.put('/change-password/:id', userController.changePassword);
-app.delete('/delete-user/:id', userController.deleteUser);
-app.put('/update-user/:id', userController.updateUser);
+app.post('/register', roleGuard(['Basic']), userController.register);
+app.post('/login', roleGuard(['Basic']), userController.login);
+app.put('/change-password/:id', roleGuard(['User']), userController.changePassword);
+app.delete('/delete-user/:id', roleGuard(['User']), userController.deleteUser);
+app.put('/update-user/:id', roleGuard(['User']), userController.updateUser);
 //currency
 app.post('/add-currency', currencyController.add);
 app.post('/get-currency/:id', currencyController.get);

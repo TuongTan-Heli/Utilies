@@ -1,9 +1,10 @@
 const { db } = require('../config/firebase');
 const userCollection = db.collection('User');
 const { loginSessionController } = require('./loginSessionController');
+const { apiKeyController } = require('./apiKeyController');
 const bcrypt = require('bcrypt');
 module.exports.userController = {
-  
+
   async register(req, res) {
     const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role } = req.body;
     try {
@@ -27,6 +28,7 @@ module.exports.userController = {
     let sessionToken = rawSessionToken ?? "";
     let userData = {};
     let userSnapshot;
+    let apiKey = "";
 
     try {
       // Check login via session token
@@ -52,22 +54,24 @@ module.exports.userController = {
           isPasswordValid = await bcrypt.compare(Password, userData.Password);
           if (isPasswordValid) {
             sessionToken = await loginSessionController.generateNewSessionToken(user.id);
+            //expect to generate or update api
+             apiKey = await apiKeyController.checkExpireOrGenerateApi(null, user.id);
           }
         }
         if (!isPasswordValid) {
-            return res.status(404).json("User not found or wrong password");
+          return res.status(404).json("User not found or wrong password");
         }
       }
 
       // Sanitize user data
-       delete userData.Password;
+      delete userData.Password;
 
       return res.status(200).json({
         status: 'Success',
         message: 'Login successful',
         data: userData,
         sessionToken,
-        // apiKey: getApiKey(userDoc.id) // Optional
+        apiKey
       });
 
     } catch (error) {
