@@ -1,8 +1,7 @@
 const { db } = require('../config/firebase');
 const budgetCollection = db.collection('Budget');
-module.exports.budgetController = {
 
-    //Register user
+const budgetController = {
     async add(req, res) {
         const { Amount, Currency, From, To, Share, User } = req.body;
         try {
@@ -68,3 +67,5 @@ module.exports.budgetController = {
         }
     },
 }
+
+module.exports.budgetController = budgetController

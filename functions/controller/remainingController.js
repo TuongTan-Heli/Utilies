@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const remainingCollection = db.collection('Remaining');
-module.exports.remainingController = {
 
+const remainingController = {
     async add(req, res) {
         const { Amount, Currency, Date, Share, User } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.remainingController = {
         }
     },
 }
+
+module.exports.remainingController = remainingController;

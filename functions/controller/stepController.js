@@ -1,7 +1,6 @@
 const { db } = require('../config/firebase');
 const stepCollection = db.collection('Step');
-module.exports.stepController = {
-
+const stepController = {
     async add(req, res) {
         const { Action, Ingredients, Note, Recipe } = req.body;
         try {
@@ -67,3 +66,5 @@ module.exports.stepController = {
         }
     },
 }
+
+module.exports.stepController = stepController;

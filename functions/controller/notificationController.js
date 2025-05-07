@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const notificationCollection = db.collection('Notification');
-module.exports.notificationController = {
 
+const notificationController = {
     async add(req, res) {
         const { DayBeforeDeadline, Every, Time, Type } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.notificationController = {
         }
     },
 }
+
+module.exports.notificationController = notificationController

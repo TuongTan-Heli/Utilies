@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const taskCollection = db.collection('Task');
-module.exports.taskController = {
 
+const taskController = {
     async add(req, res) {
         const { User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share  } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.taskController = {
         }
     },
 }
+
+module.exports.taskController = taskController;

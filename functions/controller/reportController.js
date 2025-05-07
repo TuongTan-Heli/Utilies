@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const reportCollection = db.collection('Report');
-module.exports.reportController = {
 
+const reportController = {
     async add(req, res) {
         const { User, From, To, Excel, Currency, Share } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.reportController = {
         }
     },
 }
+
+module.exports.reportController = reportController;

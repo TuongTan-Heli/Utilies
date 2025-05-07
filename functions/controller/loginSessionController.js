@@ -4,8 +4,7 @@ const userCollection = db.collection('User');
 let sessionSnapshot = {};
 const { v4: uuidv4 } = require('uuid');
 
-module.exports.loginSessionController = {
-
+const loginSessionController = {
     async checkTokenExpire(sessionToken) {
         sessionSnapshot = (await this.getSessionTokenSnapshot(sessionToken)).docs;
 
@@ -32,7 +31,7 @@ module.exports.loginSessionController = {
             sessionTokenId = sessionSnapshot[0].id;
             userId = sessionSnapshot[0].data().User;
             sessionInfo = {
-                User: userId,
+                User: sessionSnapshot[0],
                 SessionToken: uuidv4(),
                 Expire: new Date().setDate(new Date().getDate() + 30)
             }
@@ -43,14 +42,14 @@ module.exports.loginSessionController = {
             sessionInfo = sessionSnapshot[0].data();
         }
         userData = (await userCollection.doc(userId).get()).data();
-        return { userData, sessionInfo };
+        return { userData, sessionInfo, userId };
     },
     
-    async generateNewSessionToken(userId) {
-        sessionSnapshot = (await this.getSessionTokenSnapshotByUser(userId)).docs;
+    async generateNewSessionToken(user) {
+        sessionSnapshot = (await this.getSessionTokenSnapshotByUser(user.ref)).docs;
 
         const sessionTokenInfo = {
-            User: userId,
+            User: userCollection.doc(user.id),
             SessionToken: uuidv4(),
             Expire: new Date().setDate(new Date().getDate() + 30)
         }
@@ -68,10 +67,12 @@ module.exports.loginSessionController = {
             .get();
     },
 
-    async getSessionTokenSnapshotByUser(userId) {
+    async getSessionTokenSnapshotByUser(user) {
         return await loginSessionCollection
-            .where("User", "==", userId)
+            .where("User", "==", user)
             .limit(1)
             .get();
     }
 }
+
+module.exports.loginSessionController = loginSessionController;

@@ -36,55 +36,55 @@ app.put('/change-password/:id', roleGuard(['User']), userController.changePasswo
 app.delete('/delete-user/:id', roleGuard(['User']), userController.deleteUser);
 app.put('/update-user/:id', roleGuard(['User']), userController.updateUser);
 //currency
-app.post('/add-currency', currencyController.add);
-app.post('/get-currency/:id', currencyController.get);
-app.put('/update-currency/:id', currencyController.update);
-app.delete('/delete-currency/:id', currencyController.delete);
+app.post('/add-currency', roleGuard([]), currencyController.add);
+app.post('/get-currency/:id', roleGuard(['User']), currencyController.get);
+app.put('/update-currency/:id', roleGuard([]), currencyController.update);
+app.delete('/delete-currency/:id', roleGuard([]), currencyController.delete);
 //notification
-app.post('/add-notification', notificationController.add);
-app.post('/get-notification/:id', notificationController.get);
-app.put('/update-notification/:id', notificationController.update);
-app.delete('/delete-notification/:id', notificationController.delete);
+app.post('/add-notification', roleGuard(['User']), notificationController.add);
+app.post('/get-notification/:id', roleGuard(['User']), notificationController.get);
+app.put('/update-notification/:id', roleGuard(['User']), notificationController.update);
+app.delete('/delete-notification/:id', roleGuard(['User']), notificationController.delete);
 //recipe
-app.post('/add-recipe', recipeController.add);
-app.post('/get-recipe/:id', recipeController.get);
-app.put('/update-recipe/:id', recipeController.update);
-app.delete('/delete-recipe/:id', recipeController.delete);
+app.post('/add-recipe', roleGuard(['User']), recipeController.add);
+app.post('/get-recipe/:id', roleGuard(['User']), recipeController.get);
+app.put('/update-recipe/:id', roleGuard(['User']), recipeController.update);
+app.delete('/delete-recipe/:id', roleGuard(['User']), recipeController.delete);
 //remaining
-app.post('/add-remaining', remainingController.add);
-app.post('/get-remaining/:id', remainingController.get);
-app.put('/update-remaining/:id', remainingController.update);
-app.delete('/delete-remaining/:id', remainingController.delete);
+app.post('/add-remaining', roleGuard(['User']), remainingController.add);
+app.post('/get-remaining/:id', roleGuard(['User']), remainingController.get);
+app.put('/update-remaining/:id', roleGuard(['User']), remainingController.update);
+app.delete('/delete-remaining/:id', roleGuard(['User']), remainingController.delete);
 //report
-app.post('/add-report', reportController.add);
-app.post('/get-report/:id', reportController.get);
-app.put('/update-report/:id', reportController.update);
-app.delete('/delete-report/:id', reportController.delete);
+app.post('/add-report', roleGuard(['User']), reportController.add);
+app.post('/get-report/:id', roleGuard(['User']), reportController.get);
+app.put('/update-report/:id', roleGuard(['User']), reportController.update);
+app.delete('/delete-report/:id', roleGuard(['User']), reportController.delete);
 //share
-app.post('/add-share', shareController.add);
-app.post('/get-share/:id', shareController.get);
-app.put('/update-share/:id', shareController.update);
-app.delete('/delete-share/:id', shareController.delete);
+app.post('/add-share', roleGuard(['User']), shareController.add);
+app.post('/get-share/:id', roleGuard(['User']), shareController.get);
+app.put('/update-share/:id', roleGuard(['User']), shareController.update);
+app.delete('/delete-share/:id', roleGuard(['User']), shareController.delete);
 //spending
-app.post('/add-spending', spendingController.add);
-app.post('/get-spending/:id', spendingController.get);
-app.put('/update-spending/:id', spendingController.update);
-app.delete('/delete-spending/:id', spendingController.delete);
+app.post('/add-spending', roleGuard(['User']), spendingController.add);
+app.post('/get-spending/:id', roleGuard(['User']), spendingController.get);
+app.put('/update-spending/:id', roleGuard(['User']), spendingController.update);
+app.delete('/delete-spending/:id', roleGuard(['User']), spendingController.delete);
 //step
-app.post('/add-step', stepController.add);
-app.post('/get-step/:id', stepController.get);
-app.put('/update-step/:id', stepController.update);
-app.delete('/delete-step/:id', stepController.delete);
+app.post('/add-step', roleGuard(['User']), stepController.add);
+app.post('/get-step/:id', roleGuard(['User']), stepController.get);
+app.put('/update-step/:id', roleGuard(['User']), stepController.update);
+app.delete('/delete-step/:id', roleGuard(['User']), stepController.delete);
 //stock invest history
-app.post('/add-stockInvestHis', stockInvestHisController.add);
-app.post('/get-stockInvestHis/:id', stockInvestHisController.get);
-app.put('/update-stockInvestHis/:id', stockInvestHisController.update);
-app.delete('/delete-stockInvestHis/:id', stockInvestHisController.delete);
+app.post('/add-stockInvestHis', roleGuard(['User']), stockInvestHisController.add);
+app.post('/get-stockInvestHis/:id', roleGuard(['User']), stockInvestHisController.get);
+app.put('/update-stockInvestHis/:id', roleGuard(['User']), stockInvestHisController.update);
+app.delete('/delete-stockInvestHis/:id', roleGuard(['User']), stockInvestHisController.delete);
 //task
-app.post('/add-task', taskController.add);
-app.post('/get-task/:id', taskController.get);
-app.put('/update-task/:id', taskController.update);
-app.delete('/delete-task/:id', taskController.delete);
+app.post('/add-task', roleGuard(['User']), taskController.add);
+app.post('/get-task/:id', roleGuard(['User']), taskController.get);
+app.put('/update-task/:id', roleGuard(['User']), taskController.update);
+app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
 
 
 exports.app = functions.https.onRequest(app);

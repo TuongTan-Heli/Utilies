@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const stockInvestHisCollection = db.collection('StockInvestHis');
-module.exports.stockInvestHisController = {
 
+const stockInvestHisController = {
     async add(req, res) {
         const { User, Brand, Amount, Buy, Currency, Date, IsTransfer, Low, Percentage, Price, Profit } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.stockInvestHisController = {
         }
     },
 }
+
+module.exports.stockInvestHisController = stockInvestHisController;

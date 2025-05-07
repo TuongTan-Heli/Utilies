@@ -4,7 +4,6 @@ const userCollection = db.collection('User');
 const { v4: uuidv4 } = require('uuid');
 let apiKeySnapshot = {};
 
-
 const apiKeyController = {
     async validateApiKey(req, res, next) {
         const apiKey = req.headers['x-api-key'];
@@ -26,7 +25,7 @@ const apiKeyController = {
             
             const apiKeyData = await apiKeyController.checkExpireOrGenerateApi(apiKeySnapshot.docs[0], null);
 
-            const userId = apiKeyData.data().User;
+            const userId = apiKeyData.User;
             req.role = (await userCollection.doc(userId).get()).data().Role;
 
             return next();  // Proceed to the next middleware or route handler
@@ -35,19 +34,20 @@ const apiKeyController = {
         }
     },
 
-    async checkExpireOrGenerateApi(apiKeyInfo, userId)  {
+    async checkExpireOrGenerateApi(apiKeyInfo, user)  {
         let newApiKeyInfo = {
             ApiKey: uuidv4(),
             Expire: new Date().setDate(new Date().getDate() + 1)
         }
         if (!apiKeyInfo) {
-            apiKeySnapshot = (await apiKeyController.getApiSnapshotByUser(userId)).docs;
-            newApiKeyInfo.User = userId;
+            apiKeySnapshot = (await apiKeyController.getApiSnapshotByUser(user)).docs;
+            newApiKeyInfo.User = userCollection.doc(user.id);
             apiKeySnapshot.length != 0 ?
                 await apiKeyCollection.doc(apiKeySnapshot[0].id).update(newApiKeyInfo) :
                 await apiKeyCollection.add(newApiKeyInfo)
         }
         else {
+            newApiKeyInfo.User = apiKeyInfo.data().User;
             const expireDate = apiKeyInfo.data().Expire.toDate?.() || new Date(apiKeyInfo.data().Expire);
             const apiKeyId = apiKeyInfo.id;
             if (expireDate < new Date()) {
@@ -56,9 +56,10 @@ const apiKeyController = {
         }
         return newApiKeyInfo;
     },
-    async getApiSnapshotByUser(userId) {
+
+    async getApiSnapshotByUser(user) {
         return await apiKeyCollection
-            .where("User", "==", userId)
+            .where("User", "==", user)
             .limit(1)
             .get();
     }

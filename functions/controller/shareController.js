@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const shareCollection = db.collection('Share');
-module.exports.shareController = {
 
+const shareController = {
     async add(req, res) {
         const { Owner, Role, SharedUser, Type, TypeId } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.shareController = {
         }
     },
 }
+
+module.exports.shareController = shareController;

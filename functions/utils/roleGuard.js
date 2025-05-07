@@ -1,4 +1,4 @@
-module.exports.roleGuard = function roleGuard(allowedRoles) {
+const roleGuard = function roleGuard(allowedRoles) {
   allowedRoles.push("Admin");
   return (req, res, next) => {
     if (!allowedRoles.includes(req.role)) {
@@ -7,3 +7,5 @@ module.exports.roleGuard = function roleGuard(allowedRoles) {
     next();
   };
 };
+
+module.exports.roleGuard = roleGuard;

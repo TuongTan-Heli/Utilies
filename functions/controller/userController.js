@@ -3,13 +3,13 @@ const userCollection = db.collection('User');
 const { loginSessionController } = require('./loginSessionController');
 const { apiKeyController } = require('./apiKeyController');
 const bcrypt = require('bcrypt');
-module.exports.userController = {
 
+const userController = {
   async register(req, res) {
-    const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role } = req.body;
+    const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes } = req.body;
     try {
-      const hashedPassword = await hashPassword(Password);
-      const userInfo = { Email, "Password": hashedPassword, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role, DateCreated: new Date() };
+      const hashedPassword = await userController.hashPassword(Password);
+      const userInfo = { Email, "Password": hashedPassword, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role: "User", DateCreated: new Date() };
       //add validation here;
 
       await userCollection.add(userInfo);
@@ -29,14 +29,14 @@ module.exports.userController = {
     let userData = {};
     let userSnapshot;
     let apiKey = "";
-
+    let userId = "";
     try {
       // Check login via session token
       if (sessionToken) {
         const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
         userData = sessionData.userData;
         sessionToken = sessionData.sessionInfo;
-
+        userId = sessionData.userId;
         if (!userData) {
           return res.status(404).json("User not found or session expired");
         }
@@ -53,15 +53,17 @@ module.exports.userController = {
           userData = user.data();
           isPasswordValid = await bcrypt.compare(Password, userData.Password);
           if (isPasswordValid) {
-            sessionToken = await loginSessionController.generateNewSessionToken(user.id);
-            //expect to generate or update api
-             apiKey = await apiKeyController.checkExpireOrGenerateApi(null, user.id);
+            sessionToken = await loginSessionController.generateNewSessionToken(user);
+            userId = user.id;
           }
         }
         if (!isPasswordValid) {
           return res.status(404).json("User not found or wrong password");
         }
       }
+
+      //expect to generate or update api
+      apiKey = await apiKeyController.checkExpireOrGenerateApi(null, userCollection.doc(userId));
 
       // Sanitize user data
       delete userData.Password;
@@ -88,7 +90,7 @@ module.exports.userController = {
       const isPasswordValid = await bcrypt.compare(OldPassword, user.Password);
 
       if (isPasswordValid) {
-        user.Password = await hashPassword(NewPassword);
+        user.Password = await userController.hashPassword(NewPassword);
         await userCollection.doc(id).update(user);
         res.status(200).send({
           status: 'Success',
@@ -138,8 +140,10 @@ module.exports.userController = {
       res.status(500).json(error.message);
     }
   },
+
+  async hashPassword(password) {
+    return await bcrypt.hash(password, 10);
+  }
 }
 
-async function hashPassword(password) {
-  return await bcrypt.hash(password, 10);
-}
+module.exports.userController = userController;

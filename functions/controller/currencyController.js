@@ -1,7 +1,7 @@
 const { db } = require('../config/firebase');
 const currencyCollection = db.collection('Currency');
-module.exports.currencyController = {
 
+const currencyController = {
     async add(req, res) {
         const { Country, Exrate, Name } = req.body;
         try {
@@ -67,3 +67,5 @@ module.exports.currencyController = {
         }
     },
 }
+
+module.exports.currencyController = currencyController;

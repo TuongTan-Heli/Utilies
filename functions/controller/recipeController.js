@@ -1,6 +1,7 @@
 const { db } = require('../config/firebase');
 const recipeCollection = db.collection('Recipe');
-module.exports.recipeController = {
+
+const recipeController = {
 
     async add(req, res) {
         const { Name, Description, Image, Ingredients, Steps, Share, User } = req.body;
@@ -67,3 +68,5 @@ module.exports.recipeController = {
         }
     },
 }
+
+module.exports.recipeController = recipeController;
