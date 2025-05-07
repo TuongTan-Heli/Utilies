@@ -38,7 +38,7 @@ const loginSessionController = {
             loginSessionCollection.docs(sessionTokenId).update(sessionInfo);
         }
         else {
-            userId = sessionSnapshot[0].data().User;
+            userId = sessionSnapshot[0].data().User.id;
             sessionInfo = sessionSnapshot[0].data();
         }
         userData = (await userCollection.doc(userId).get()).data();
