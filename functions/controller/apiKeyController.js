@@ -25,7 +25,7 @@ const apiKeyController = {
             
             const apiKeyData = await apiKeyController.checkExpireOrGenerateApi(apiKeySnapshot.docs[0], null);
 
-            const userId = apiKeyData.User;
+            const userId = apiKeyData.User.id;
             req.role = (await userCollection.doc(userId).get()).data().Role;
 
             return next();  // Proceed to the next middleware or route handler
