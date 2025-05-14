@@ -31,7 +31,7 @@ app.use(apiKeyController.validateApiKey);
 
 //user
 app.post('/register', roleGuard(['Basic']), userController.register);
-app.post('/login', roleGuard(['Basic']), userController.login);
+app.post('/login', roleGuard(['Basic','User']), userController.login);
 app.put('/change-password/:id', roleGuard(['User']), userController.changePassword);
 app.delete('/delete-user/:id', roleGuard(['User']), userController.deleteUser);
 app.put('/update-user/:id', roleGuard(['User']), userController.updateUser);
