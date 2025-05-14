@@ -6,10 +6,18 @@ const bcrypt = require('bcrypt');
 
 const userController = {
   async register(req, res) {
-    const { Email, Password, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes } = req.body;
+    const { Email, Password, UserName } = req.body;
     try {
       const hashedPassword = await userController.hashPassword(Password);
-      const userInfo = { Email, "Password": hashedPassword, UserName, EmailVerified, EnableUpdateNoti, Notification, TaskNotiMessage, UpdateNotiMes, Role: "User", DateCreated: new Date() };
+      const userInfo = { Email, "Password": hashedPassword, 
+        UserName, 
+        EmailVerified: false, 
+        EnableUpdateNoti: false, 
+        Notification: null, 
+        TaskNotiMessage: "Hello, you have {taskName} undone and due soon.", 
+        UpdateNotiMes: "Hello, you haven't updated your spending for a while.", 
+        Role: "User", 
+        DateCreated: new Date() };
       //add validation here;
 
       await userCollection.add(userInfo);
