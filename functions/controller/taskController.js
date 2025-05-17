@@ -1,14 +1,20 @@
 const { db } = require('../config/firebase');
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
+const currencyCollection = db.collection('Currency');
 
 const taskController = {
     async add(req, res) {
-        const { UserId, Type, Deadline, Description, EnableNoti, Name, NotiOnDeadline, Priority } = req.body;
+        const { UserId, Type, Deadline, Description, EnableNoti, Name, NotiOnDeadline, Priority, Price, CurrencyId } = req.body;
         try {
             const User = await userCollection.doc(UserId);
+            let Currency = null;
+            if (CurrencyId) {
+                Currency = await currencyCollection.doc(CurrencyId);
+            }
+
             const taskInfo = {
-                User, Type, Deadline, Description, Done: null, EnableNoti, LastNotiDate: null, Name, NotiOnDeadline, Notification: null, Priority, Share: null
+                User, Type, Deadline, Description, Done: null, EnableNoti, LastNotiDate: null, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Currency, Price
             };
             //add validation here;
 
