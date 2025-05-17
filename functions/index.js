@@ -40,6 +40,8 @@ app.post('/add-currency', roleGuard([]), currencyController.add);
 app.post('/get-currency/:id', roleGuard(['User']), currencyController.get);
 app.put('/update-currency/:id', roleGuard([]), currencyController.update);
 app.delete('/delete-currency/:id', roleGuard([]), currencyController.delete);
+app.get('/get-all-currency', roleGuard(['User']), currencyController.getAll);
+
 //notification
 app.post('/add-notification', roleGuard(['User']), notificationController.add);
 app.post('/get-notification/:id', roleGuard(['User']), notificationController.get);
@@ -82,7 +84,7 @@ app.put('/update-stockInvestHis/:id', roleGuard(['User']), stockInvestHisControl
 app.delete('/delete-stockInvestHis/:id', roleGuard(['User']), stockInvestHisController.delete);
 //task
 app.post('/add-task', roleGuard(['User']), taskController.add);
-app.post('/get-task/:id', roleGuard(['User']), taskController.get);
+app.get('/get-all-task/:id', roleGuard(['User']), taskController.getAll);
 app.put('/update-task/:id', roleGuard(['User']), taskController.update);
 app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
 

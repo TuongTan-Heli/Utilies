@@ -1,0 +1,137 @@
+[debug] [2025-05-17T10:11:09.269Z] ----------------------------------------------------------------------
+[debug] [2025-05-17T10:11:09.271Z] Command:       E:\nodejs\node.exe C:\Users\Helijacky\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --inspect-functions
+[debug] [2025-05-17T10:11:09.271Z] CLI Version:   14.3.1
+[debug] [2025-05-17T10:11:09.271Z] Platform:      win32
+[debug] [2025-05-17T10:11:09.271Z] Node Version:  v22.15.0
+[debug] [2025-05-17T10:11:09.271Z] Time:          Sat May 17 2025 20:11:09 GMT+1000 (Australian Eastern Standard Time)
+[debug] [2025-05-17T10:11:09.271Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-17T10:11:09.393Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-17T10:11:09.393Z] > authorizing via signed-in user (helijackybu@gmail.com)
+[info] i  emulators: Starting emulators: functions, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, extensions"}}
+[debug] [2025-05-17T10:11:09.395Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:09.395Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:09.396Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/utilies-508e7/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-05-17T10:11:09.396Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/utilies-508e7/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/utilies-508e7
+[debug] [2025-05-17T10:11:10.812Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/utilies-508e7/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-05-17T10:11:10.813Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/utilies-508e7/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-05-17T10:11:10.813Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:10.813Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:10.813Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/utilies-508e7 [none]
+[debug] [2025-05-17T10:11:11.338Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/utilies-508e7 200
+[debug] [2025-05-17T10:11:11.338Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/utilies-508e7 {"projectNumber":"112429189280","projectId":"utilies-508e7","lifecycleState":"ACTIVE","name":"utilies","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-04-29T05:40:10.447073Z"}
+[debug] [2025-05-17T10:11:11.342Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-17T10:11:11.342Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-05-17T10:11:11.345Z] [hub] writing locator at C:\Users\HELIJA~1\AppData\Local\Temp\hub-utilies-508e7.json
+[debug] [2025-05-17T10:11:11.348Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-05-17T10:11:11.350Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-17T10:11:11.350Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-17T10:11:11.350Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-05-17T10:11:11.350Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: You are running the Functions emulator in debug mode. This means that functions will execute in sequence rather than in parallel. {"metadata":{"emulator":{"name":"functions"},"message":"You are running the Functions emulator in debug mode. This means that functions will execute in sequence rather than in parallel."}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-05-17T10:11:11.379Z] defaultcredentials: writing to file C:\Users\Helijacky\AppData\Roaming\firebase\helijackybu_gmail_com_application_default_credentials.json
+[debug] [2025-05-17T10:11:11.380Z] Setting GAC to C:\Users\Helijacky\AppData\Roaming\firebase\helijackybu_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Helijacky\\AppData\\Roaming\\firebase\\helijackybu_gmail_com_application_default_credentials.json"}}
+[debug] [2025-05-17T10:11:11.380Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:11.380Z] Checked if tokens are valid: true, expires at: 1747479771167
+[debug] [2025-05-17T10:11:11.380Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/utilies-508e7/adminSdkConfig [none]
+[debug] [2025-05-17T10:11:12.458Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/utilies-508e7/adminSdkConfig 200
+[debug] [2025-05-17T10:11:12.458Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/utilies-508e7/adminSdkConfig {"projectId":"utilies-508e7","storageBucket":"utilies-508e7.firebasestorage.app"}
+[debug] [2025-05-17T10:11:12.469Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "F:\Heli\Download\Code\Utilies\Utilies-functions\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\" for Cloud Functions..."}}
+[debug] [2025-05-17T10:11:12.473Z] Validating nodejs source
+[debug] [2025-05-17T10:11:12.901Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions node",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-05-17T10:11:12.901Z] Building nodejs source
+[debug] [2025-05-17T10:11:12.902Z] Failed to find version of module node: reached end of search path F:\Heli\Download\Code\Utilies\Utilies-functions\functions\node_modules
+[info] +  functions: Using node@22 from host. 
+[debug] [2025-05-17T10:11:12.903Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-05-17T10:11:12.906Z] Found firebase-functions binary at 'F:\Heli\Download\Code\Utilies\Utilies-functions\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8994
+
+[debug] [2025-05-17T10:11:13.206Z] Got response from /__/functions.yaml {"endpoints":{"app":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"app"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2025-05-17T10:11:17.237Z] defaultcredentials: writing to file C:\Users\Helijacky\AppData\Roaming\firebase\helijackybu_gmail_com_application_default_credentials.json
+[debug] [2025-05-17T10:11:17.238Z] Setting GAC to C:\Users\Helijacky\AppData\Roaming\firebase\helijackybu_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Helijacky\\AppData\\Roaming\\firebase\\helijackybu_gmail_com_application_default_credentials.json"}}
+[info] +  functions: Loaded functions definitions from source: app. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: app."}}
+[info] +  functions[us-central1-app]: http function initialized (http://127.0.0.1:5001/utilies-508e7/us-central1/app). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/utilies-508e7/us-central1/app)."}}
+[info] +  functions: Using debug port 9229 for functions codebase default {"metadata":{"emulator":{"name":"functions"},"message":"Using debug port 9229 for functions codebase default"}}
+[debug] [2025-05-17T10:11:17.247Z] [worker-pool] addWorker(~shared~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~shared~)"}}
+[debug] [2025-05-17T10:11:17.247Z] [worker-pool] Adding worker with key ~free~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~free~, total=1"}}
+[info] >  Debugger listening on ws://127.0.0.1:9229/af3394d3-5149-4959-8c7a-2128f0b858fb {"user":"Debugger listening on ws://127.0.0.1:9229/af3394d3-5149-4959-8c7a-2128f0b858fb\r","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m Debugger listening on ws://127.0.0.1:9229/af3394d3-5149-4959-8c7a-2128f0b858fb\r"}}
+[info] >  For help, see: https://nodejs.org/en/docs/inspector {"user":"For help, see: https://nodejs.org/en/docs/inspector\r","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m For help, see: https://nodejs.org/en/docs/inspector\r"}}
+[debug] [2025-05-17T10:11:17.800Z] [runtime-status] [25252] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.800Z] [runtime-status] [25252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.801Z] [runtime-status] [25252] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2025-05-17T10:11:17.801Z] [runtime-status] [25252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.942Z] [runtime-status] [25252] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Checked functions.config() {\"config\":{}}"}}
+[debug] [2025-05-17T10:11:17.942Z] [runtime-status] [25252] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"6.3.2","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}}"}}
+[debug] [2025-05-17T10:11:17.942Z] [runtime-status] [25252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.944Z] [runtime-status] [25252] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.945Z] [runtime-status] [25252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2025-05-17T10:11:17.945Z] [runtime-status] [25252] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"12.7.0","resolution":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions\\node_modules\\firebase-admin\\lib\\index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}}"}}
+[debug] [2025-05-17T10:11:18.008Z] [runtime-status] [25252] initializeApp(DEFAULT) {"credential":{"implicit":false,"projectId":"utilies-508e7","privateKey":"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDEAamriFTwofAO\n9pO2+aGNAPQ3Gy+0aO6vNzkWEXyIVWz3lFf6WrsxNiK5v5d2f7jKV0WCl5TScgFJ\nE0Hq8JH5Z8dUQpy+FeKycn+Fpz1+u6xb1z2yZOCJrmh/0As5saCgTnbdsTixqbZe\nILSSS9A7XLCPWJfuJM1KPjsnSx/d23XiFvjLyBtwdEL3+RiMD6oRdowAfWQjd2Xv\nnPNALXSNv3dY9po5JM0EVJs/Xo3GUuy+IvRXb48YmNudPiLmCaW40hu628pNmSXP\n2WE80j+9uteZq7pex574ItGnZeYOx4Sqo9HETkEr0AZHu5PpPGd13izXpd+UvwO/\nyA7+L1J5AgMBAAECggEAUMZepdIJLyGNTJ1RQpadfP5npk4N2stjkdGwNOf/6i9K\nOL1phELf4eftZ58NTEhWXwyYGLlfG1rgLL1C7Q83GRErlA3finZ6dg+5fdrt/Mxa\nu354bowj/Jljd0jFV4FcMLQlSDdApfbKsP/JaoDTz6LjIC/ibMG92FrNBeRvvX16\npQJgvqadx/2BY+HhjhfFkA0AKMRdfJzipZ65Sw8TvFXEx7E501W/xAOfPy7KfF3N\nCiRITbugfvQCCljJnQRQP2j64ZOLHNsZ4M/l/dwEVmSw3WY2+Fzo+ng5bhGeCJxe\nf2dqSeWW4Oil7CR5jICC4G2xs0Lzlhenf1d74sG2AQKBgQDtirzliHUuBcZZPiMH\nUyp7jh3rJyH9lyioDJyreHn9BtriUZiqCY3QbgRdIupx//Bugwxip1vgup40hv2E\nBuZxXoC4xmKsM16aFH2cVtljbG7T5hUNgpRZ0Rh7Ck1LWKmXcnEctJ/YmTO4OgHW\nGsC1hfN+ct98Rw49DhRHyqsIuwKBgQDTPLApsuAA/nCNzrvuMHcxxoG50W2KVIzt\nyYJp9lUlheSSUq82gyhl5cAiyTYj29d8CEUa631ncTJ0JSn8Y9vMlTnIKbhkA2vF\nZqPk62msha9vDl11XdTs+APHsQKmmHHg0tV/Nb+ws1+TnpzfUFwBGBnTsVGLtezb\nGg2a+LIoWwKBgH7p3EjqomjnbvUpbL+yIIWJBdUowFFkHLXEn0RCBzM4IWQ/4kge\n+KT+0tgMGqSz8Pqqi8h90Gn+ax53bSXIJgE2U6HlZLzKaWX7Qq1v/Y/QVFpkmKTy\nOl7Oh7zdYTS7d0jSPTrwCmNIX0izvV1uR730hobtyxf0Qtg+GHnO/5iXAoGBAMrI\nXc0J/OS3XdGkfuDgAez0xaBenivHkyrK4blbUs4cxRp66d0I+AUqE9LRGno+F5To\nU37ORqrBDlBVRQMX0e+J6dhvxKWuaw0rxXaDUATgqVORlMKQ+1EpnmdbVFId0mSj\nwXTHYmf9KmmKQMpYWJpsSo7gkInwcZq8XgdBa7Y1AoGAJ1TBT+XkTgzvZ6pSRi4b\nPgvYkTSm6FhyrSjD+xMnypFXEC+1AyCB+TxVmclqNNMeqGurDbRtmqGZgfcIZ+NI\nX6n4MWy/41eQIl5SDmdJ5WG7h7pCsRCAUK33fTN5bxZcGpjzc0jvaLn+YL8YNZRl\nk4nMRVy6oNmlaI+e+96PUfM=\n-----END PRIVATE KEY-----\n","clientEmail":"firebase-adminsdk-fbsvc@utilies-508e7.iam.gserviceaccount.com","httpClient":{"retry":{"maxRetries":4,"statusCodes":[503],"ioErrorCodes":["ECONNRESET","ETIMEDOUT"],"backOffFactor":0.5,"maxDelayInMillis":60000}}},"databaseURL":"https://utilies-508e7.firebaseio.com"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] initializeApp(DEFAULT) {\"credential\":{\"implicit\":false,\"projectId\":\"utilies-508e7\",\"privateKey\":\"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDEAamriFTwofAO\\n9pO2+aGNAPQ3Gy+0aO6vNzkWEXyIVWz3lFf6WrsxNiK5v5d2f7jKV0WCl5TScgFJ\\nE0Hq8JH5Z8dUQpy+FeKycn+Fpz1+u6xb1z2yZOCJrmh/0As5saCgTnbdsTixqbZe\\nILSSS9A7XLCPWJfuJM1KPjsnSx/d23XiFvjLyBtwdEL3+RiMD6oRdowAfWQjd2Xv\\nnPNALXSNv3dY9po5JM0EVJs/Xo3GUuy+IvRXb48YmNudPiLmCaW40hu628pNmSXP\\n2WE80j+9uteZq7pex574ItGnZeYOx4Sqo9HETkEr0AZHu5PpPGd13izXpd+UvwO/\\nyA7+L1J5AgMBAAECggEAUMZepdIJLyGNTJ1RQpadfP5npk4N2stjkdGwNOf/6i9K\\nOL1phELf4eftZ58NTEhWXwyYGLlfG1rgLL1C7Q83GRErlA3finZ6dg+5fdrt/Mxa\\nu354bowj/Jljd0jFV4FcMLQlSDdApfbKsP/JaoDTz6LjIC/ibMG92FrNBeRvvX16\\npQJgvqadx/2BY+HhjhfFkA0AKMRdfJzipZ65Sw8TvFXEx7E501W/xAOfPy7KfF3N\\nCiRITbugfvQCCljJnQRQP2j64ZOLHNsZ4M/l/dwEVmSw3WY2+Fzo+ng5bhGeCJxe\\nf2dqSeWW4Oil7CR5jICC4G2xs0Lzlhenf1d74sG2AQKBgQDtirzliHUuBcZZPiMH\\nUyp7jh3rJyH9lyioDJyreHn9BtriUZiqCY3QbgRdIupx//Bugwxip1vgup40hv2E\\nBuZxXoC4xmKsM16aFH2cVtljbG7T5hUNgpRZ0Rh7Ck1LWKmXcnEctJ/YmTO4OgHW\\nGsC1hfN+ct98Rw49DhRHyqsIuwKBgQDTPLApsuAA/nCNzrvuMHcxxoG50W2KVIzt\\nyYJp9lUlheSSUq82gyhl5cAiyTYj29d8CEUa631ncTJ0JSn8Y9vMlTnIKbhkA2vF\\nZqPk62msha9vDl11XdTs+APHsQKmmHHg0tV/Nb+ws1+TnpzfUFwBGBnTsVGLtezb\\nGg2a+LIoWwKBgH7p3EjqomjnbvUpbL+yIIWJBdUowFFkHLXEn0RCBzM4IWQ/4kge\\n+KT+0tgMGqSz8Pqqi8h90Gn+ax53bSXIJgE2U6HlZLzKaWX7Qq1v/Y/QVFpkmKTy\\nOl7Oh7zdYTS7d0jSPTrwCmNIX0izvV1uR730hobtyxf0Qtg+GHnO/5iXAoGBAMrI\\nXc0J/OS3XdGkfuDgAez0xaBenivHkyrK4blbUs4cxRp66d0I+AUqE9LRGno+F5To\\nU37ORqrBDlBVRQMX0e+J6dhvxKWuaw0rxXaDUATgqVORlMKQ+1EpnmdbVFId0mSj\\nwXTHYmf9KmmKQMpYWJpsSo7gkInwcZq8XgdBa7Y1AoGAJ1TBT+XkTgzvZ6pSRi4b\\nPgvYkTSm6FhyrSjD+xMnypFXEC+1AyCB+TxVmclqNNMeqGurDbRtmqGZgfcIZ+NI\\nX6n4MWy/41eQIl5SDmdJ5WG7h7pCsRCAUK33fTN5bxZcGpjzc0jvaLn+YL8YNZRl\\nk4nMRVy6oNmlaI+e+96PUfM=\\n-----END PRIVATE KEY-----\\n\",\"clientEmail\":\"firebase-adminsdk-fbsvc@utilies-508e7.iam.gserviceaccount.com\",\"httpClient\":{\"retry\":{\"maxRetries\":4,\"statusCodes\":[503],\"ioErrorCodes\":[\"ECONNRESET\",\"ETIMEDOUT\"],\"backOffFactor\":0.5,\"maxDelayInMillis\":60000}}},\"databaseURL\":\"https://utilies-508e7.firebaseio.com\"}"}}
+[debug] [2025-05-17T10:11:18.045Z] [runtime-status] [25252] Functions runtime initialized. {"cwd":"F:\\Heli\\Download\\Code\\Utilies\\Utilies-functions\\functions","node_version":"22.15.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Functions runtime initialized. {\"cwd\":\"F:\\\\Heli\\\\Download\\\\Code\\\\Utilies\\\\Utilies-functions\\\\functions\",\"node_version\":\"22.15.0\"}"}}
+[debug] [2025-05-17T10:11:18.045Z] [runtime-status] [25252] Listening to port: \\?\pipe\fire_emu_d442eee829f89602 {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25252] Listening to port: \\\\?\\pipe\\fire_emu_d442eee829f89602"}}
+[debug] [2025-05-17T10:11:18.103Z] [worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: IDLE"}}
+[debug] [2025-05-17T10:11:18.105Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator   │ Host:Port      │ View in Emulator UI              │
+├────────────┼────────────────┼──────────────────────────────────┤
+│ Functions  │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-05-17T10:13:00.399Z] [worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: exited"}}
+[debug] [2025-05-17T10:13:00.399Z] [worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: FINISHED {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-7053b7d2-33e4-468c-8e48-186d7c8cd940]: FINISHED"}}
+[debug] [2025-05-17T10:13:00.399Z] Received signal SIGHUP 1
+[info]  
+[info] i  emulators: Received SIGHUP for the first time. Starting a clean shutdown. 
+[info] i  emulators: Please wait for a clean shutdown or send the SIGHUP signal again to stop right now. 
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  extensions: Stopping Extensions Emulator {"metadata":{"emulator":{"name":"extensions"},"message":"Stopping Extensions Emulator"}}
+[debug] [2025-05-17T10:13:00.401Z] [Extensions] Stopping Extensions emulator, this is a noop.
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  eventarc: Stopping Eventarc Emulator {"metadata":{"emulator":{"name":"eventarc"},"message":"Stopping Eventarc Emulator"}}
+[info] i  tasks: Stopping Cloud Tasks Emulator {"metadata":{"emulator":{"name":"tasks"},"message":"Stopping Cloud Tasks Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[info] i  logging: Stopping Logging Emulator {"metadata":{"emulator":{"name":"logging"},"message":"Stopping Logging Emulator"}}
+[debug] [2025-05-17T10:13:00.404Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.

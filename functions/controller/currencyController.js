@@ -66,6 +66,20 @@ const currencyController = {
             res.status(500).json(error.message);
         }
     },
+
+    async getAll(req, res) {
+        try {
+            const allCurrency = await currencyCollection.get();
+
+            res.status(200).send({
+                status: 'Success',
+                message: 'Success',
+                data: allCurrency.docs
+            });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    },
 }
 
 module.exports.currencyController = currencyController;

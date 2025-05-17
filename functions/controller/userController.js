@@ -116,8 +116,7 @@ const userController = {
     const { UserName, Email } = req.body;
     try {
       const { id } = req.params;
-      const user = (await userCollection.doc(id).get()).data();
-
+      
       const userInfo = {
         Email: Email,
         UserName: UserName

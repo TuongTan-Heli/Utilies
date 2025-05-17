@@ -1,12 +1,14 @@
 const { db } = require('../config/firebase');
 const taskCollection = db.collection('Task');
+const userCollection = db.collection('User');
 
 const taskController = {
     async add(req, res) {
-        const { User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share  } = req.body;
+        const { UserId, Type, Deadline, Description, EnableNoti, Name, NotiOnDeadline, Priority } = req.body;
         try {
+            const User = await userCollection.doc(UserId);
             const taskInfo = {
-                User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share 
+                User, Type, Deadline, Description, Done: null, EnableNoti, LastNotiDate: null, Name, NotiOnDeadline, Notification: null, Priority, Share: null
             };
             //add validation here;
 
@@ -21,15 +23,18 @@ const taskController = {
         }
     },
 
-    async get(req, res) {
+    async getAll(req, res) {
         try {
             const { id } = req.params;
-            const task = (await taskCollection.doc(id).get()).data();
+            const user = userCollection.doc(id);
+            const tasks = await taskCollection
+                .where("User", "==", user)
+                .get();
 
             res.status(200).send({
                 status: 'Success',
                 message: 'Success',
-                data: task
+                data: tasks.docs
             });
         } catch (error) {
             res.status(500).json(error.message);
@@ -37,10 +42,10 @@ const taskController = {
     },
 
     async update(req, res) {
-        const { User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share  } = req.body;
+        const { User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share } = req.body;
         try {
             const newTaskInfo = {
-                User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share 
+                User, Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share
             };
             const { id } = req.params;
             await taskCollection.doc(id).update(newTaskInfo);
