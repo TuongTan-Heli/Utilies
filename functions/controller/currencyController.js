@@ -74,7 +74,14 @@ const currencyController = {
             res.status(200).send({
                 status: 'Success',
                 message: 'Success',
-                data: allCurrency.docs
+                data: allCurrency.docs.map(
+                    currency => {
+                        return {
+                            id: currency.id.split('/').pop(),
+                            data: currency.data()
+                        };
+                    }
+                )
             });
         } catch (error) {
             res.status(500).json(error.message);
