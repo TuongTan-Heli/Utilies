@@ -3,6 +3,7 @@ const loginSessionCollection = db.collection('loginSession');
 const userCollection = db.collection('User');
 let sessionSnapshot = {};
 const { v4: uuidv4 } = require('uuid');
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
 
 const loginSessionController = {
     async checkTokenExpire(sessionToken) {
@@ -21,43 +22,48 @@ const loginSessionController = {
     async getDataFromSessionToken(sessionToken) {
         const isTokenExpired = await this.checkTokenExpire(sessionToken);
         sessionSnapshot = (await this.getSessionTokenSnapshot(sessionToken)).docs;
-        let userId = "";
+
         sessionInfo = {};
         if (sessionSnapshot.length == 0) {
             return {}; // No session found
         }
-
+        const userId = sessionSnapshot[0].data().User.id;
         if (isTokenExpired) {
-            sessionTokenId = sessionSnapshot[0].id;
-            userId = sessionSnapshot[0].data().User;
-            sessionInfo = {
-                User: sessionSnapshot[0],
-                SessionToken: uuidv4(),
-                Expire: new Date().setDate(new Date().getDate() + 30)
-            }
-            loginSessionCollection.docs(sessionTokenId).update(sessionInfo);
+            // sessionTokenId = sessionSnapshot[0].id;
+            // sessionInfo = {
+            //     SessionToken: uuidv4(),
+            //     Expire: new Date().setDate(new Date().getDate() + 30)
+            // }
+            // loginSessionCollection.doc(sessionTokenId).update(sessionInfo);
+            return 'Token expired';
         }
         else {
-            userId = sessionSnapshot[0].data().User.id;
-            sessionInfo = sessionSnapshot[0].data();
+            sessionInfo = transferFirestoreWithNestedReferences(sessionSnapshot[0]);
         }
-        userData = (await userCollection.doc(userId).get()).data();
+        userData = await transferFirestoreWithNestedReferences((await userCollection.doc(userId).get()));
         return { userData, sessionInfo, userId };
     },
-    
+
     async generateNewSessionToken(user) {
         sessionSnapshot = (await this.getSessionTokenSnapshotByUser(user.ref)).docs;
 
         const sessionTokenInfo = {
             User: userCollection.doc(user.id),
             SessionToken: uuidv4(),
-            Expire: new Date().setDate(new Date().getDate() + 30)
+            Expire: new Date().setDate(new Date().getDate() + 30),
+            data() {
+                return {
+                    User: this.User,
+                    SessionToken: this.SessionToken,
+                    Expire: this.Expire,
+                };
+            }
         }
-        sessionSnapshot.length != 0 ?  
-        await loginSessionCollection.doc(sessionSnapshot[0].id).update(sessionTokenInfo):
-        await loginSessionCollection.add(sessionTokenInfo) 
+        sessionSnapshot.length != 0 ?
+            await loginSessionCollection.doc(sessionSnapshot[0].id).update(sessionTokenInfo.data()) :
+            await loginSessionCollection.add(sessionTokenInfo.data())
 
-        return sessionTokenInfo;
+        return await transferFirestoreWithNestedReferences(sessionTokenInfo);
     },
 
     async getSessionTokenSnapshot(sessionToken) {

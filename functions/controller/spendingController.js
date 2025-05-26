@@ -1,12 +1,19 @@
-const { db } = require('../config/firebase');
+const { db, Timestamp } = require('../config/firebase');
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
+
+
 const spendingCollection = db.collection('Spending');
+const UserCollection = db.collection('User');
+const CurrencyCollection = db.collection('Currency');
 
 const spendingController = {
     async add(req, res) {
-        const { User, Type, Share, Currency, Date, Note, Special } = req.body;
+        const { UserId, Amount, Type, CurrencyId, Note, Special } = req.body;
+        const User = await UserCollection.doc(UserId);
+        const Currency = await CurrencyCollection.doc(CurrencyId);
         try {
             const spendingInfo = {
-                User, Type, Share, Currency, Date, Note, Special
+                User, Amount, Type, Share: null, Currency, Date: new Date(), Note, Special
             };
             //add validation here;
 
@@ -36,11 +43,40 @@ const spendingController = {
         }
     },
 
+    async getSpendingInPeriod(req, res) {
+        try {
+            const { id } = req.params;
+            const { From, To } = req.body;
+            const user = await UserCollection.doc(id);
+            if (user) {
+                const spendings = await spendingCollection
+                    .where("Date", ">=", Timestamp.fromDate(new Date(From)))
+                    .where("Date", "<=", Timestamp.fromDate(new Date(To)))
+                    .where("User", "==", user)
+                    .get();
+
+                const cookedSpendings = await transferFirestoreWithNestedReferences(spendings.docs);
+                res.status(200).send({
+                    status: 'Success',
+                    message: 'Success',
+                    data: cookedSpendings
+                });
+            }
+            else {
+                res.status(404);
+            }
+
+
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    },
+
     async update(req, res) {
-        const { User, Type, Share, Currency, Date, Note, Special } = req.body;
+        const { Type, Amount, Share, Currency, Date, Note, Special } = req.body;
         try {
             const newSpendingInfo = {
-                User, Type, Share, Currency, Date, Note, Special
+                Type, Amount, Share, Currency, Date, Note, Special
             };
             const { id } = req.params;
             await spendingCollection.doc(id).update(newSpendingInfo);

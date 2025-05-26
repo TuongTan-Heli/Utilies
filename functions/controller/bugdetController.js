@@ -68,4 +68,4 @@ const budgetController = {
     },
 }
 
-module.exports.budgetController = budgetController
+export default budgetController

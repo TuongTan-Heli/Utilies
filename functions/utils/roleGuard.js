@@ -8,4 +8,4 @@ const roleGuard = function roleGuard(allowedRoles) {
   };
 };
 
-module.exports.roleGuard = roleGuard;
+module.exports = { roleGuard };

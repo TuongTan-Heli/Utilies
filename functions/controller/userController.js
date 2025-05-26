@@ -2,13 +2,20 @@ const { db } = require('../config/firebase');
 const userCollection = db.collection('User');
 const { loginSessionController } = require('./loginSessionController');
 const { apiKeyController } = require('./apiKeyController');
+const currencyCollection = db.collection('Currency');
 const bcrypt = require('bcrypt');
+const { currencyController } = require('./currencyController');
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
 
 const userController = {
   async register(req, res) {
     const { Email, Password, UserName } = req.body;
     try {
       const hashedPassword = await userController.hashPassword(Password);
+      const DefaultCurrencySnapshot = await currencyController
+          .where("Name", "==", "AUD")
+          .get();
+      const DefaultCurrency = DefaultCurrencySnapshot.docs[0];    
       const userInfo = { Email, "Password": hashedPassword, 
         UserName, 
         EmailVerified: false, 
@@ -17,6 +24,7 @@ const userController = {
         TaskNotiMessage: "Hello, you have {taskName} undone and due soon.", 
         UpdateNotiMes: "Hello, you haven't updated your spending for a while.", 
         Role: "User", 
+        DefaultCurrency,
         DateCreated: new Date() };
       //add validation here;
 
@@ -58,7 +66,7 @@ const userController = {
           .get();
 
         for (const user of userSnapshot.docs) {
-          userData = user.data();
+          userData = await transferFirestoreWithNestedReferences(user);
           isPasswordValid = await bcrypt.compare(Password, userData.Password);
           if (isPasswordValid) {
             sessionToken = await loginSessionController.generateNewSessionToken(user);
@@ -113,13 +121,14 @@ const userController = {
   },
 
   async updateUser(req, res) {
-    const { UserName, Email } = req.body;
+    const { UserName, Email, DefaultCurrencyId } = req.body;
     try {
       const { id } = req.params;
-      
+      const DefaultCurrency = await currencyCollection.doc(DefaultCurrencyId);
       const userInfo = {
-        Email: Email,
-        UserName: UserName
+        Email,
+        UserName,
+        DefaultCurrency
       };
 
       await userCollection.doc(id).update(userInfo);

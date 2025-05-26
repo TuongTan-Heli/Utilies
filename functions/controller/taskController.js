@@ -1,4 +1,5 @@
 const { db } = require('../config/firebase');
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
@@ -36,32 +37,8 @@ const taskController = {
             const tasks = await taskCollection
                 .where("User", "==", user)
                 .get();
-            const cookedTasks = await Promise.all(
-                tasks.docs.map(
-                    async task => {
-                        const currencyId = task._fieldsProto.Currency.referenceValue || null;
-                        let currencyData = null;
-
-                        if (currencyId) {
-                            const currencyDoc = (await currencyCollection.doc(currencyId.split('/').pop()).get()).data();
-                            currencyData = {
-                                id: currencyId.split('/').pop(),
-                                data: currencyDoc
-                            };
-                        }
-
-                        return {
-                            id: task.id.split('/').pop(),
-                            data: {
-                                ...task.data(),
-                                Currency: currencyData,
-                            }
-                        }
-                    }
-
-                )
-
-            )
+                
+            const cookedTasks = await transferFirestoreWithNestedReferences(tasks.docs);
 
             res.status(200).send({
                 status: 'Success',

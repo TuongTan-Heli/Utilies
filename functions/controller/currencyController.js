@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const currencyCollection = db.collection('Currency');
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
 
 const currencyController = {
     async add(req, res) {
@@ -70,18 +71,11 @@ const currencyController = {
     async getAll(req, res) {
         try {
             const allCurrency = await currencyCollection.get();
-
+            const cookedAllCurrency = await transferFirestoreWithNestedReferences(allCurrency.docs);
             res.status(200).send({
                 status: 'Success',
                 message: 'Success',
-                data: allCurrency.docs.map(
-                    currency => {
-                        return {
-                            id: currency.id.split('/').pop(),
-                            data: currency.data()
-                        };
-                    }
-                )
+                data: cookedAllCurrency
             });
         } catch (error) {
             res.status(500).json(error.message);

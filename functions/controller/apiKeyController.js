@@ -1,8 +1,9 @@
 const { db } = require('../config/firebase');
+const { v4: uuidv4 } = require('uuid');
 const apiKeyCollection = db.collection('ApiKey');
 const userCollection = db.collection('User');
-const { v4: uuidv4 } = require('uuid');
 let apiKeySnapshot = {};
+const { transferFirestoreWithNestedReferences } = require('../utils/utils');
 
 const apiKeyController = {
     async validateApiKey(req, res, next) {
@@ -22,7 +23,7 @@ const apiKeyController = {
                 return res.status(403).json({ message: 'Invalid API Key' });
             }
             //expect to check expire
-            
+
             const apiKeyData = await apiKeyController.checkExpireOrGenerateApi(apiKeySnapshot.docs[0], null);
 
             const userId = apiKeyData.User.id;
@@ -34,16 +35,25 @@ const apiKeyController = {
         }
     },
 
-    async checkExpireOrGenerateApi(apiKeyInfo, user)  {
+    async checkExpireOrGenerateApi(apiKeyInfo, user) {
         let newApiKeyInfo = {
             ApiKey: uuidv4(),
-            Expire: new Date().setDate(new Date().getDate() + 1)
+            Expire: new Date().setDate(new Date().getDate() + 1),
+            User: null,
+            data() {
+                return {
+                    ApiKey: this.ApiKey,
+                    Expire: this.Expire,
+                    User: this.User
+                }
+
+            }
         }
         if (!apiKeyInfo) {
             apiKeySnapshot = (await apiKeyController.getApiSnapshotByUser(user)).docs;
             newApiKeyInfo.User = userCollection.doc(user.id);
             apiKeySnapshot.length != 0 ?
-                await apiKeyCollection.doc(apiKeySnapshot[0].id).update(newApiKeyInfo) :
+                await apiKeyCollection.doc(apiKeySnapshot[0].id).update(newApiKeyInfo.data()) :
                 await apiKeyCollection.add(newApiKeyInfo)
         }
         else {
@@ -51,10 +61,10 @@ const apiKeyController = {
             const expireDate = apiKeyInfo.data().Expire.toDate?.() || new Date(apiKeyInfo.data().Expire);
             const apiKeyId = apiKeyInfo.id;
             if (expireDate < new Date()) {
-                await apiKeyCollection.doc(apiKeyId).update(newApiKeyInfo);
+                await apiKeyCollection.doc(apiKeyId).update(newApiKeyInfo.data());
             }
         }
-        return newApiKeyInfo;
+        return await transferFirestoreWithNestedReferences(newApiKeyInfo);
     },
 
     async getApiSnapshotByUser(user) {

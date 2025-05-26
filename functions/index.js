@@ -10,6 +10,7 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
+const { skipForPaths } = require('./utils/utils.js');
 
 const {roleGuard} = require('./utils/roleGuard');
 const {apiKeyController} = require('./controller/apiKeyController');
@@ -24,9 +25,12 @@ const {spendingController} = require('./controller/spendingController');
 const {stepController} = require('./controller/stepController');
 const {stockInvestHisController} = require('./controller/stockInvestHisController');
 const {taskController} = require('./controller/taskController');
+const pathsToSkip = [
+  { path: '/login', method: 'POST' },
+];
 
 
-app.use(apiKeyController.validateApiKey); 
+app.use(skipForPaths(pathsToSkip, apiKeyController.validateApiKey)); 
 
 
 //user
@@ -70,6 +74,7 @@ app.delete('/delete-share/:id', roleGuard(['User']), shareController.delete);
 //spending
 app.post('/add-spending', roleGuard(['User']), spendingController.add);
 app.post('/get-spending/:id', roleGuard(['User']), spendingController.get);
+app.post('/get-spending-between/:id', roleGuard(['User']), spendingController.getSpendingInPeriod);
 app.put('/update-spending/:id', roleGuard(['User']), spendingController.update);
 app.delete('/delete-spending/:id', roleGuard(['User']), spendingController.delete);
 //step

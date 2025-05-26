@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -8,4 +8,4 @@ admin.initializeApp({
 });
 const db = getFirestore('utilies');
 db.settings({ignoreUndefinedProperties: true});
-module.exports = {admin, db};
+module.exports = { admin, db, Timestamp };
