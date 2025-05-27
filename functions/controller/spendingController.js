@@ -11,6 +11,7 @@ const spendingController = {
         const { UserId, Amount, Type, CurrencyId, Note, Special } = req.body;
         const User = await UserCollection.doc(UserId);
         const Currency = await CurrencyCollection.doc(CurrencyId);
+        
         try {
             const spendingInfo = {
                 User, Amount, Type, Share: null, Currency, Date: new Date(), Note, Special

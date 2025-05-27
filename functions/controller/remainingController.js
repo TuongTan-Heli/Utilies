@@ -1,12 +1,17 @@
 const { db } = require('../config/firebase');
 const remainingCollection = db.collection('Remaining');
+const userCollection = db.collection('User');
+const currencyCollection = db.collection('Currency');
 
 const remainingController = {
     async add(req, res) {
-        const { Amount, Currency, Date, Share, User } = req.body;
+        const { Amount, CurrencyId, UserId } = req.body;
+        const User = userCollection.doc(UserId);
+        const Currency = currencyCollection.doc(CurrencyId);
+
         try {
             const remainingInfo = {
-                Amount, Currency, Date, Share, User
+                Amount, Currency, Date: new Date(), Share: null, User
             };
             //add validation here;
 

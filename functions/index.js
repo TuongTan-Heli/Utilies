@@ -25,6 +25,8 @@ const {spendingController} = require('./controller/spendingController');
 const {stepController} = require('./controller/stepController');
 const {stockInvestHisController} = require('./controller/stockInvestHisController');
 const {taskController} = require('./controller/taskController');
+const {budgetController} = require('./controller/budgetController');
+
 const pathsToSkip = [
   { path: '/login', method: 'POST' },
 ];
@@ -92,6 +94,11 @@ app.post('/add-task', roleGuard(['User']), taskController.add);
 app.get('/get-all-task/:id', roleGuard(['User']), taskController.getAll);
 app.put('/update-task/:id', roleGuard(['User']), taskController.update);
 app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
+//budget
+app.post('/add-budget', roleGuard(['User']), budgetController.add);
+app.get('/get-budget/:id', roleGuard(['User']), budgetController.get);
+app.put('/update-budget/:id', roleGuard(['User']), budgetController.update);
+app.delete('/delete-budget/:id', roleGuard(['User']), budgetController.delete);
 
 
 exports.app = functions.https.onRequest(app);
