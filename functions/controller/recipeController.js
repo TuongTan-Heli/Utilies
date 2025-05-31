@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const recipeCollection = db.collection('Recipe');
+const { validateRes } = require('../utils/utils');
 
 const recipeController = {
 
@@ -13,10 +14,10 @@ const recipeController = {
 
             await recipeCollection.add(recipeInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -27,11 +28,11 @@ const recipeController = {
             const { id } = req.params;
             const recipe = (await recipeCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: recipe
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -45,10 +46,10 @@ const recipeController = {
             };
             const { id } = req.params;
             await recipeCollection.doc(id).update(newRecipeInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -59,10 +60,10 @@ const recipeController = {
             const { id } = req.params;
             await recipeCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

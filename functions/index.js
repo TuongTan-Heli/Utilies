@@ -29,6 +29,7 @@ const {budgetController} = require('./controller/budgetController');
 
 const pathsToSkip = [
   { path: '/login', method: 'POST' },
+  { path: '/register', method: 'POST' },
 ];
 
 

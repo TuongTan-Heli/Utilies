@@ -1,5 +1,7 @@
 const { db } = require('../config/firebase');
 const stepCollection = db.collection('Step');
+const { validateRes } = require('../utils/utils');
+
 const stepController = {
     async add(req, res) {
         const { Action, Ingredients, Note, Recipe } = req.body;
@@ -11,10 +13,10 @@ const stepController = {
 
             await stepCollection.add(stepInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -25,11 +27,11 @@ const stepController = {
             const { id } = req.params;
             const step = (await stepCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: step
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -43,10 +45,10 @@ const stepController = {
             };
             const { id } = req.params;
             await stepCollection.doc(id).update(newStepInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -57,10 +59,10 @@ const stepController = {
             const { id } = req.params;
             await stepCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

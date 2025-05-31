@@ -5,35 +5,37 @@ const { apiKeyController } = require('./apiKeyController');
 const currencyCollection = db.collection('Currency');
 const bcrypt = require('bcrypt');
 const { currencyController } = require('./currencyController');
-const { transferFirestoreWithNestedReferences } = require('../utils/utils');
+const { transferFirestoreWithNestedReferences, validateRes } = require('../utils/utils');
 
 const userController = {
   async register(req, res) {
     const { Email, Password, UserName } = req.body;
     try {
       const hashedPassword = await userController.hashPassword(Password);
-      const DefaultCurrencySnapshot = await currencyController
-          .where("Name", "==", "AUD")
-          .get();
-      const DefaultCurrency = DefaultCurrencySnapshot.docs[0];    
-      const userInfo = { Email, "Password": hashedPassword, 
-        UserName, 
-        EmailVerified: false, 
-        EnableUpdateNoti: false, 
-        Notification: null, 
-        TaskNotiMessage: "Hello, you have {taskName} undone and due soon.", 
-        UpdateNotiMes: "Hello, you haven't updated your spending for a while.", 
-        Role: "User", 
+      const DefaultCurrencySnapshot = await currencyCollection
+        .where("Name", "==", "AUD")
+        .get();
+      const DefaultCurrency = DefaultCurrencySnapshot.docs[0].ref;
+      const userInfo = {
+        Email, "Password": hashedPassword,
+        UserName,
+        EmailVerified: false,
+        EnableUpdateNoti: false,
+        Notification: null,
+        TaskNotiMessage: "Hello, you have {taskName} undone and due soon.",
+        UpdateNotiMes: "Hello, you haven't updated your spending for a while.",
+        Role: "User",
         DefaultCurrency,
-        DateCreated: new Date() };
+        DateCreated: new Date()
+      };
       //add validation here;
 
       await userCollection.add(userInfo);
 
-      res.status(200).send({
+      res.status(200).send(validateRes({
         status: 'Success',
         message: 'Success',
-      });
+      }));
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -50,8 +52,11 @@ const userController = {
       // Check login via session token
       if (sessionToken) {
         const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
-        userData = sessionData.userData;
-        sessionToken = sessionData.sessionInfo;
+        userData = sessionData.sessionInfo.User;
+        sessionToken = {
+          SessionToken: sessionData.sessionInfo.SessionToken,
+          Expire: sessionData.sessionInfo.Expire
+        };
         userId = sessionData.userId;
         if (!userData) {
           return res.status(404).json("User not found or session expired");
@@ -80,17 +85,15 @@ const userController = {
 
       //expect to generate or update api
       apiKey = await apiKeyController.checkExpireOrGenerateApi(null, userCollection.doc(userId));
+      delete apiKey.User
 
-      // Sanitize user data
-      delete userData.Password;
-
-      return res.status(200).json({
+      return res.status(200).send(validateRes({
         status: 'Success',
         message: 'Login successful',
         data: userData,
         sessionToken,
         apiKey
-      });
+      }));
 
     } catch (error) {
       return res.status(500).json({ status: 'Error', message: error.message });
@@ -108,10 +111,10 @@ const userController = {
       if (isPasswordValid) {
         user.Password = await userController.hashPassword(NewPassword);
         await userCollection.doc(id).update(user);
-        res.status(200).send({
+        res.status(200).send(validateRes({
           status: 'Success',
           message: 'Success'
-        });
+        }));
       } else {
         res.status(400).json("Current password does not match")
       }
@@ -133,10 +136,10 @@ const userController = {
 
       await userCollection.doc(id).update(userInfo);
 
-      res.status(200).send({
+      res.status(200).send(validateRes({
         status: 'Success',
         message: 'Success'
-      });
+      }));
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -148,10 +151,10 @@ const userController = {
       await userCollection.doc(id).delete();
       //handle delete everything related to user
 
-      res.status(200).send({
+      res.status(200).send(validateRes({
         status: 'Success',
         message: 'Success'
-      });
+      }));
     } catch (error) {
       res.status(500).json(error.message);
     }

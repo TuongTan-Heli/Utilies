@@ -1,6 +1,6 @@
 const { db } = require('../config/firebase');
 const currencyCollection = db.collection('Currency');
-const { transferFirestoreWithNestedReferences } = require('../utils/utils');
+const { transferFirestoreWithNestedReferences, validateRes } = require('../utils/utils');
 
 const currencyController = {
     async add(req, res) {
@@ -13,10 +13,10 @@ const currencyController = {
 
             await currencyCollection.add(currencyInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -27,11 +27,11 @@ const currencyController = {
             const { id } = req.params;
             const currency = (await currencyCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: currency
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -45,10 +45,10 @@ const currencyController = {
                 Country, Exrate, Name
             };
             await currencyCollection.doc(id).update(newCurrencyInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -59,10 +59,10 @@ const currencyController = {
             const { id } = req.params;
             await currencyCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -72,11 +72,11 @@ const currencyController = {
         try {
             const allCurrency = await currencyCollection.get();
             const cookedAllCurrency = await transferFirestoreWithNestedReferences(allCurrency.docs);
-            res.status(200).send({
+            res.status(200).send(({
                 status: 'Success',
                 message: 'Success',
                 data: cookedAllCurrency
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

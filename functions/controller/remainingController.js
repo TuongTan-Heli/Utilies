@@ -2,6 +2,7 @@ const { db } = require('../config/firebase');
 const remainingCollection = db.collection('Remaining');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
+const { validateRes } = require('../utils/utils');
 
 const remainingController = {
     async add(req, res) {
@@ -17,10 +18,10 @@ const remainingController = {
 
             await remainingCollection.add(remainingInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -31,11 +32,11 @@ const remainingController = {
             const { id } = req.params;
             const remaining = (await remainingCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: remaining
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -49,10 +50,10 @@ const remainingController = {
             };
             const { id } = req.params;
             await remainingCollection.doc(id).update(newRemainingInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -63,10 +64,10 @@ const remainingController = {
             const { id } = req.params;
             await remainingCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

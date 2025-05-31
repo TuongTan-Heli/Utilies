@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const reportCollection = db.collection('Report');
+const { validateRes } = require('../utils/utils');
 
 const reportController = {
     async add(req, res) {
@@ -12,10 +13,10 @@ const reportController = {
 
             await reportCollection.add(reportInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -26,11 +27,11 @@ const reportController = {
             const { id } = req.params;
             const report = (await reportCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: report
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -44,10 +45,10 @@ const reportController = {
             };
             const { id } = req.params;
             await reportCollection.doc(id).update(newReportInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -58,10 +59,10 @@ const reportController = {
             const { id } = req.params;
             await reportCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

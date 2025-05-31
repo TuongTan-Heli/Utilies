@@ -17,7 +17,6 @@ async function resolveReferencesRecursively(obj) {
 
   for (const key in obj) {
     const value = obj[key];
-
     if (isDocumentReference(value)) {
       try {
         const refSnap = await value.get(); // or getDoc(value) for modular
@@ -42,6 +41,34 @@ async function resolveReferencesRecursively(obj) {
   }
 
   return result;
+}
+
+export function validateRes(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(validateRes);
+  }
+
+  if (obj !== null && typeof obj === 'object') {
+    const result = {};
+
+    for (const key in obj) {
+      if (key === 'Password') {
+        continue;
+      }
+
+      const value = obj[key];
+
+      if (value !== null && typeof value === 'object') {
+        result[key] = validateRes(value);
+      } else {
+        result[key] = value;
+      }
+    }
+
+    return result;
+  }
+
+  return obj;
 }
 
 // Helper

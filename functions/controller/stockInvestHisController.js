@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const stockInvestHisCollection = db.collection('StockInvestHis');
+const { validateRes } = require('../utils/utils');
 
 const stockInvestHisController = {
     async add(req, res) {
@@ -12,10 +13,10 @@ const stockInvestHisController = {
 
             await stockInvestHisCollection.add(stockInvestHisInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -26,11 +27,11 @@ const stockInvestHisController = {
             const { id } = req.params;
             const stockInvestHis = (await stockInvestHisCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: stockInvestHis
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -44,10 +45,10 @@ const stockInvestHisController = {
             };
             const { id } = req.params;
             await stockInvestHisCollection.doc(id).update(newStockInvestHisInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -58,10 +59,10 @@ const stockInvestHisController = {
             const { id } = req.params;
             await stockInvestHisCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

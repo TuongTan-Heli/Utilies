@@ -64,6 +64,7 @@ const apiKeyController = {
                 await apiKeyCollection.doc(apiKeyId).update(newApiKeyInfo.data());
             }
         }
+
         return await transferFirestoreWithNestedReferences(newApiKeyInfo);
     },
 

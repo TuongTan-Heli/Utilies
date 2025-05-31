@@ -1,5 +1,5 @@
 const { db } = require('../config/firebase');
-const { transferFirestoreWithNestedReferences } = require('../utils/utils');
+const { transferFirestoreWithNestedReferences,validateRes } = require('../utils/utils');
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
@@ -21,10 +21,10 @@ const taskController = {
 
             await taskCollection.add(taskInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -40,11 +40,11 @@ const taskController = {
                 
             const cookedTasks = await transferFirestoreWithNestedReferences(tasks.docs);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: cookedTasks
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -58,10 +58,10 @@ const taskController = {
             };
             const { id } = req.params;
             await taskCollection.doc(id).update(newTaskInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -72,10 +72,10 @@ const taskController = {
             const { id } = req.params;
             await taskCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

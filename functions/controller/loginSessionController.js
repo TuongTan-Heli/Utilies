@@ -3,7 +3,7 @@ const loginSessionCollection = db.collection('loginSession');
 const userCollection = db.collection('User');
 let sessionSnapshot = {};
 const { v4: uuidv4 } = require('uuid');
-const { transferFirestoreWithNestedReferences } = require('../utils/utils');
+const { transferFirestoreWithNestedReferences,validateRes } = require('../utils/utils');
 
 const loginSessionController = {
     async checkTokenExpire(sessionToken) {
@@ -29,26 +29,20 @@ const loginSessionController = {
         }
         const userId = sessionSnapshot[0].data().User.id;
         if (isTokenExpired) {
-            // sessionTokenId = sessionSnapshot[0].id;
-            // sessionInfo = {
-            //     SessionToken: uuidv4(),
-            //     Expire: new Date().setDate(new Date().getDate() + 30)
-            // }
-            // loginSessionCollection.doc(sessionTokenId).update(sessionInfo);
             return 'Token expired';
         }
         else {
-            sessionInfo = transferFirestoreWithNestedReferences(sessionSnapshot[0]);
+            sessionInfo = await transferFirestoreWithNestedReferences(sessionSnapshot[0]);
         }
         userData = await transferFirestoreWithNestedReferences((await userCollection.doc(userId).get()));
-        return { userData, sessionInfo, userId };
+        return { sessionInfo, userId };
     },
 
     async generateNewSessionToken(user) {
         sessionSnapshot = (await this.getSessionTokenSnapshotByUser(user.ref)).docs;
 
         const sessionTokenInfo = {
-            User: userCollection.doc(user.id),
+            // User: userCollection.doc(user.id),
             SessionToken: uuidv4(),
             Expire: new Date().setDate(new Date().getDate() + 30),
             data() {

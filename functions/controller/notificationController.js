@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const notificationCollection = db.collection('Notification');
+const { validateRes } = require('../utils/utils');
 
 const notificationController = {
     async add(req, res) {
@@ -12,10 +13,10 @@ const notificationController = {
 
             await notificationCollection.add(notificationInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -26,11 +27,11 @@ const notificationController = {
             const { id } = req.params;
             const notification = (await notificationCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: notification
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -44,10 +45,10 @@ const notificationController = {
             };
             const { id } = req.params;
             await notificationCollection.doc(id).update(newNotificationInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -58,10 +59,10 @@ const notificationController = {
             const { id } = req.params;
             await notificationCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }

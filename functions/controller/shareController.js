@@ -1,5 +1,6 @@
 const { db } = require('../config/firebase');
 const shareCollection = db.collection('Share');
+const { validateRes } = require('../utils/utils');
 
 const shareController = {
     async add(req, res) {
@@ -12,10 +13,10 @@ const shareController = {
 
             await shareCollection.add(shareInfo);
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -26,11 +27,11 @@ const shareController = {
             const { id } = req.params;
             const share = (await shareCollection.doc(id).get()).data();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
                 data: share
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -44,10 +45,10 @@ const shareController = {
             };
             const { id } = req.params;
             await shareCollection.doc(id).update(newShareInfo);
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success'
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -58,10 +59,10 @@ const shareController = {
             const { id } = req.params;
             await shareCollection.doc(id).delete();
 
-            res.status(200).send({
+            res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
-            });
+            }));
         } catch (error) {
             res.status(500).json(error.message);
         }
