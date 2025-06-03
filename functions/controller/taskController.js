@@ -1,4 +1,4 @@
-const { db } = require('../config/firebase');
+const { db, Timestamp } = require('../config/firebase');
 const { transferFirestoreWithNestedReferences,validateRes } = require('../utils/utils');
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
@@ -15,7 +15,7 @@ const taskController = {
             }
 
             const taskInfo = {
-                User, Type, Deadline, Description, Done: null, EnableNoti, LastNotiDate: null, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Currency, Price
+                User, Type, Deadline: Timestamp.fromDate(new Date(Deadline)), Description, Done: null, EnableNoti, LastNotiDate: null, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Currency, Price
             };
             //add validation here;
 
@@ -54,7 +54,7 @@ const taskController = {
         const { Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share, Price } = req.body;
         try {
             const newTaskInfo = {
-                Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Price
+                Type, Deadline: Timestamp.fromDate(new Date(Deadline)), Description, Done: Done ? Timestamp.fromDate(new Date(Done)) : null, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Price
             };
             const { id } = req.params;
             await taskCollection.doc(id).update(newTaskInfo);

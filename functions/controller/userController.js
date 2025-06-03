@@ -116,7 +116,7 @@ const userController = {
           message: 'Success'
         }));
       } else {
-        res.status(400).json("Current password does not match")
+        res.status(401).json("Current password does not match")
       }
     } catch (error) {
       res.status(500).json(error.message);

@@ -1,8 +1,8 @@
-const { db } = require('../config/firebase');
+const { db, Timestamp } = require('../config/firebase');
 const remainingCollection = db.collection('Remaining');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
-const { validateRes } = require('../utils/utils');
+const { validateRes, transferFirestoreWithNestedReferences } = require('../utils/utils');
 
 const remainingController = {
     async add(req, res) {
@@ -42,11 +42,58 @@ const remainingController = {
         }
     },
 
+    async getLatest(req, res) {
+        try {
+            const { id } = req.params;
+            const user = await userCollection.doc(id);
+            const LatestRemaining = await remainingCollection
+                .where("User", "==", user)
+                .where('Date', "<=", Timestamp.fromDate(new Date()))
+                .orderBy('Date', 'desc')
+                .limit(1)
+                .get();
+
+            if (LatestRemaining.docs.length != 0) {
+                res.status(200).send(validateRes({
+                    status: 'Success',
+                    message: 'Success',
+                    data: await transferFirestoreWithNestedReferences(LatestRemaining.docs[0])
+                }));
+            } else {
+                res.status(404).json("No latest remaining")
+            }
+
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    },
+
+    async getAll(req, res) {
+        try {
+            const { id } = req.params;
+            const user = await userCollection.doc(id);
+            const remaining = await remainingCollection.where("User", "==", user)
+                .orderBy('Date', 'desc')
+                .get();
+
+            const cookedRemaining = await transferFirestoreWithNestedReferences(remaining.docs);
+            res.status(200).send(validateRes({
+                status: 'Success',
+                message: 'Success',
+                data: cookedRemaining
+            }));
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    },
+
     async update(req, res) {
-        const { Amount, Currency, Date, Share, User } = req.body;
+        const { Amount, CurrencyId, Day } = req.body;
+        const Currency = currencyCollection.doc(CurrencyId);
+
         try {
             const newRemainingInfo = {
-                Amount, Currency, Date, Share, User
+                Amount, Currency, Date: Timestamp.fromDate(new Date(Day)), Share: null,
             };
             const { id } = req.params;
             await remainingCollection.doc(id).update(newRemainingInfo);

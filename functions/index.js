@@ -62,6 +62,8 @@ app.delete('/delete-recipe/:id', roleGuard(['User']), recipeController.delete);
 //remaining
 app.post('/add-remaining', roleGuard(['User']), remainingController.add);
 app.post('/get-remaining/:id', roleGuard(['User']), remainingController.get);
+app.get('/get-latest-remaining/:id', roleGuard(['User']), remainingController.getLatest);
+app.get('/get-all-remaining/:id', roleGuard(['User']), remainingController.getAll);
 app.put('/update-remaining/:id', roleGuard(['User']), remainingController.update);
 app.delete('/delete-remaining/:id', roleGuard(['User']), remainingController.delete);
 //report
@@ -98,6 +100,8 @@ app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
 //budget
 app.post('/add-budget', roleGuard(['User']), budgetController.add);
 app.get('/get-budget/:id', roleGuard(['User']), budgetController.get);
+app.get('/get-latest-budget/:id', roleGuard(['User']), budgetController.getLatest);
+app.get('/get-all-budget/:id', roleGuard(['User']), budgetController.getAll);
 app.put('/update-budget/:id', roleGuard(['User']), budgetController.update);
 app.delete('/delete-budget/:id', roleGuard(['User']), budgetController.delete);
 
