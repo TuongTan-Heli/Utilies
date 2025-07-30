@@ -1,6 +1,13 @@
+const { algoliasearch } = require('algoliasearch');
 const { db } = require('../config/firebase');
 const recipeCollection = db.collection('Recipe');
 const { validateRes } = require('../utils/utils');
+
+require('dotenv').config();
+
+const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
+const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY;
+const ALGOLIA_INDEX_NAME = "Recipe";
 
 const recipeController = {
 
@@ -68,6 +75,29 @@ const recipeController = {
             res.status(500).json(error.message);
         }
     },
+
+    async search(req, res) {
+        const {key} = req.params;
+        if (!key) {
+            return res.status(400).send("Missing query param `q`");
+        }
+
+        try {
+            const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
+            const algoliaRes = await client.search({
+                requests: [
+                    {
+                        indexName: ALGOLIA_INDEX_NAME,
+                        query: key,
+                    },
+                ],
+            });
+            return res.status(200).json(algoliaRes.results[0]?.hits);
+        } catch (err) {
+            console.error("Search failed:", err);
+            return res.status(500).send("Search failed");
+        }
+    }
 }
 
 module.exports.recipeController = recipeController;

@@ -4,7 +4,6 @@ const { loginSessionController } = require('./loginSessionController');
 const { apiKeyController } = require('./apiKeyController');
 const currencyCollection = db.collection('Currency');
 const bcrypt = require('bcrypt');
-const { currencyController } = require('./currencyController');
 const { transferFirestoreWithNestedReferences, validateRes } = require('../utils/utils');
 
 const userController = {

@@ -34,7 +34,7 @@ const loginSessionController = {
         else {
             sessionInfo = await transferFirestoreWithNestedReferences(sessionSnapshot[0]);
         }
-        userData = await transferFirestoreWithNestedReferences((await userCollection.doc(userId).get()));
+        userData = await transferFirestoreWithNestedReferences((((await userCollection.doc(userId).get()))));
         return { sessionInfo, userId };
     },
 

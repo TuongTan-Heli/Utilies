@@ -74,10 +74,10 @@ const spendingController = {
     },
 
     async update(req, res) {
-        const { Type, Amount, Currency, Date, Note, Special } = req.body;
+        const { Type, Amount, Currency, Day, Note, Special } = req.body;
         try {
             const newSpendingInfo = {
-                Type, Amount, Share: null, Currency, Date, Note, Special
+                Type, Amount, Share: null, Currency, Date: Timestamp.fromDate(new Date(Day)), Note, Special
             };
             const { id } = req.params;
             await spendingCollection.doc(id).update(newSpendingInfo);

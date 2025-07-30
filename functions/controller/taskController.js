@@ -37,7 +37,7 @@ const taskController = {
             const tasks = await taskCollection
                 .where("User", "==", user)
                 .get();
-                
+
             const cookedTasks = await transferFirestoreWithNestedReferences(tasks.docs);
 
             res.status(200).send(validateRes({
@@ -51,10 +51,17 @@ const taskController = {
     },
 
     async update(req, res) {
-        const { Type, Deadline, Description, Done, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share, Price } = req.body;
+        const { Type, Deadline, Description, Done, EnableNoti, CurrencyId, LastNotiDate, Name, NotiOnDeadline, Notification, Priority, Share, Price } = req.body;
+
+        let Currency = null;
+        if (CurrencyId) {
+            Currency = await currencyCollection.doc(CurrencyId);
+            // console.log("success")
+        }
+
         try {
             const newTaskInfo = {
-                Type, Deadline: Timestamp.fromDate(new Date(Deadline)), Description, Done: Done ? Timestamp.fromDate(new Date(Done)) : null, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Price
+                Type, Deadline: Timestamp.fromDate(new Date(Deadline)), Currency, Description, Done: Done ? Timestamp.fromDate(new Date(Done)) : null, EnableNoti, LastNotiDate, Name, NotiOnDeadline, Notification: null, Priority, Share: null, Price
             };
             const { id } = req.params;
             await taskCollection.doc(id).update(newTaskInfo);

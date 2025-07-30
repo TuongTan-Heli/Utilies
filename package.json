@@ -1,11 +1,12 @@
 {
-  "dependencies": {
-    "firebase": "^11.8.1",
-    "uuid": "^11.1.0"
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
   },
-   "devDependencies": {
-    "@react-native-community/cli": "latest",
+  "dependencies": {
+    "algolia": "^0.0.0",
+    "firebase-functions": "^6.4.0",
+    "react-element-to-jsx-string": "^17.0.1",
+    "search": "^1.0.0"
   }
 }
-
-
