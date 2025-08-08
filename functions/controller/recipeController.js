@@ -2,6 +2,9 @@ const { algoliasearch } = require('algoliasearch');
 const { db } = require('../config/firebase');
 const recipeCollection = db.collection('Recipe');
 const { validateRes } = require('../utils/utils');
+const { stepController } = require('./stepController');
+const userCollection = db.collection('User');
+
 
 require('dotenv').config();
 
@@ -12,14 +15,29 @@ const ALGOLIA_INDEX_NAME = "Recipe";
 const recipeController = {
 
     async add(req, res) {
-        const { Name, Description, Image, Ingredients, Steps, Share, User } = req.body;
+        const { Name, Description, Image, Ingredients, Steps, Share, UserId } = req.body;
         try {
+
+            const User = await userCollection.doc(UserId);
             const recipeInfo = {
-                Name, Description, Image, Ingredients, Steps, Share, User
+                Name, Description, Image, Ingredients, Share: null, User
             };
             //add validation here;
 
-            await recipeCollection.add(recipeInfo);
+            const recipeRef = await recipeCollection.add(recipeInfo);
+
+            const stepPromises = Steps.map(async (step) => {
+                step.Recipe = recipeRef;
+                const stepRef = await stepController.add(step);
+                return stepRef;
+            });
+
+            const stepRefs = await Promise.all(stepPromises);
+            // await Promise.all(stepPromises);
+            recipeRef.set(
+                { Steps: stepRefs },
+                { merge: true } // <-- merges with existing fields, doesn't overwrite whole doc
+            );
 
             res.status(200).send(validateRes({
                 status: 'Success',
@@ -77,8 +95,8 @@ const recipeController = {
     },
 
     async search(req, res) {
-        const {key} = req.params;
-        if (!key) {
+        const { key, userId } = req.body;
+        if (!key || !userId) {
             return res.status(400).send("Missing query param `q`");
         }
 
@@ -89,6 +107,7 @@ const recipeController = {
                     {
                         indexName: ALGOLIA_INDEX_NAME,
                         query: key,
+                        filters: `User:User${userId}`
                     },
                 ],
             });

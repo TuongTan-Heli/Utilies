@@ -3,22 +3,17 @@ const stepCollection = db.collection('Step');
 const { validateRes } = require('../utils/utils');
 
 const stepController = {
-    async add(req, res) {
-        const { Action, Ingredients, Note, Recipe } = req.body;
+    async add(step) {
+        const { Action, Ingredients, Note, Recipe } = step;
         try {
             const stepInfo = {
                 Action, Ingredients, Note, Recipe
             };
             //add validation here;
 
-            await stepCollection.add(stepInfo);
-
-            res.status(200).send(validateRes({
-                status: 'Success',
-                message: 'Success'
-            }));
+            return await stepCollection.add(stepInfo);
         } catch (error) {
-            res.status(500).json(error.message);
+             throw new Error(`Failed to add step: ${error.message}`);
         }
     },
 

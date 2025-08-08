@@ -59,7 +59,7 @@ app.post('/add-recipe', roleGuard(['User']), recipeController.add);
 app.post('/get-recipe/:id', roleGuard(['User']), recipeController.get);
 app.put('/update-recipe/:id', roleGuard(['User']), recipeController.update);
 app.delete('/delete-recipe/:id', roleGuard(['User']), recipeController.delete);
-app.post('/search-recipe/:key', roleGuard(['User']), recipeController.search);
+app.post('/search-recipe/', roleGuard(['User']), recipeController.search);
 //remaining
 app.post('/add-remaining', roleGuard(['User']), remainingController.add);
 app.post('/get-remaining/:id', roleGuard(['User']), remainingController.get);
