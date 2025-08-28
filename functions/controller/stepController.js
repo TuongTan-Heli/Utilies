@@ -13,7 +13,7 @@ const stepController = {
 
             return await stepCollection.add(stepInfo);
         } catch (error) {
-             throw new Error(`Failed to add step: ${error.message}`);
+            throw new Error(`Failed to add step: ${error.message}`);
         }
     },
 
@@ -32,34 +32,29 @@ const stepController = {
         }
     },
 
-    async update(req, res) {
-        const { Action, Ingredients, Note, Recipe } = req.body;
+    async update({ Action, Ingredients, Note, Recipe, id }) {
+        // const { Action, Ingredients, Note, Recipe } = req.body;
         try {
             const newStepInfo = {
                 Action, Ingredients, Note, Recipe
             };
-            const { id } = req.params;
+            // const { id } = req.params;
             await stepCollection.doc(id).update(newStepInfo);
-            res.status(200).send(validateRes({
-                status: 'Success',
-                message: 'Success'
-            }));
+            // res.status(200).send(validateRes({
+            //     status: 'Success',
+            //     message: 'Success'
+            // }));
         } catch (error) {
             res.status(500).json(error.message);
         }
     },
 
-    async delete(req, res) {
+    async delete(stepId) {
         try {
-            const { id } = req.params;
-            await stepCollection.doc(id).delete();
-
-            res.status(200).send(validateRes({
-                status: 'Success',
-                message: 'Success',
-            }));
+            // const { id } = req.params;
+            await stepCollection.doc(stepId).delete();
         } catch (error) {
-            res.status(500).json(error.message);
+            throw new Error(`Failed to delete step: ${error.message}`);
         }
     },
 }
