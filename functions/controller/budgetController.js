@@ -60,7 +60,11 @@ const budgetController = {
                 }))
             }
             else {
-                res.status(404).json("No upcoming budget")
+                res.status(200).send(validateRes({
+                    status: 'Success',
+                    message: 'Success',
+                    data: 'No upcoming budget'
+                }))
             }
 
         }

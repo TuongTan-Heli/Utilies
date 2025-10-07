@@ -42,60 +42,64 @@ const userController = {
 
   async login(req, res) {
     const { UserName, Password, sessionToken: rawSessionToken } = req.body;
-    let sessionToken = rawSessionToken ?? "";
-    let userData = {};
-    let userSnapshot;
-    let apiKey = "";
-    let userId = "";
+    let sessionToken = rawSessionToken || "";
+
     try {
-      // Check login via session token
+      let userData = null;
+      let userId = null;
+
       if (sessionToken) {
         const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
+        if (!sessionData?.sessionInfo?.User) {
+          return res.status(401).json({ message: "Invalid or expired session" });
+        }
+
         userData = sessionData.sessionInfo.User;
         sessionToken = {
           SessionToken: sessionData.sessionInfo.SessionToken,
-          Expire: sessionData.sessionInfo.Expire
+          Expire: sessionData.sessionInfo.Expire,
         };
         userId = sessionData.userId;
-        if (!userData) {
-          return res.status(404).json("User not found or session expired");
-        }
       }
 
-      // Check login via username/password
-      if (UserName && Password) {
-        let isPasswordValid = false;
-        userSnapshot = await userCollection
-          .where("UserName", "==", UserName)
-          .get();
+      else if (UserName && Password) {
+        const snapshot = await userCollection.where("UserName", "==", UserName).get();
+        if (snapshot.empty) {
+          return res.status(404).json({ message: "User not found" });
+        }
 
-        for (const user of userSnapshot.docs) {
-          userData = await transferFirestoreWithNestedReferences(user);
-          isPasswordValid = await bcrypt.compare(Password, userData.Password);
-          if (isPasswordValid) {
-            sessionToken = await loginSessionController.generateNewSessionToken(user);
-            userId = user.id;
-          }
+        const userDoc = snapshot.docs[0];
+        const userInfo = await transferFirestoreWithNestedReferences(userDoc);
+        const isValid = await bcrypt.compare(Password, userInfo.Password);
+        if (!isValid) {
+          return res.status(401).json({ message: "Incorrect password" });
         }
-        if (!isPasswordValid) {
-          return res.status(404).json("User not found or wrong password");
-        }
+
+        sessionToken = await loginSessionController.generateNewSessionToken(userDoc);
+        userData = userInfo;
+        userId = userDoc.id;
       }
 
-      //expect to generate or update api
-      apiKey = await apiKeyController.checkExpireOrGenerateApi(null, userCollection.doc(userId));
-      delete apiKey.User
+      else {
+        return res.status(400).json({ message: "Missing credentials or session token" });
+      }
 
-      return res.status(200).send(validateRes({
-        status: 'Success',
-        message: 'Login successful',
-        data: userData,
-        sessionToken,
-        apiKey
-      }));
+      // Generate or refresh API key
+      const apiKey = await apiKeyController.checkExpireOrGenerateApi(null, userCollection.doc(userId));
+      delete apiKey.User;
+
+      return res.status(200).json(
+        validateRes({
+          status: "Success",
+          message: "Login successful",
+          data: userData,
+          sessionToken,
+          apiKey,
+        })
+      );
 
     } catch (error) {
-      return res.status(500).json({ status: 'Error', message: error.message });
+      return res.status(500).json({ status: "Error", message: error.message });
     }
   },
 
