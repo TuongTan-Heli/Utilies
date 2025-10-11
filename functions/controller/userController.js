@@ -51,7 +51,7 @@ const userController = {
       if (sessionToken) {
         const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
         if (!sessionData?.sessionInfo?.User) {
-          return res.status(401).json({ message: "Invalid or expired session" });
+          return res.status(401).json(validateRes({ status: "Success", message: "Invalid or expired session" }));
         }
 
         userData = sessionData.sessionInfo.User;
@@ -65,14 +65,20 @@ const userController = {
       else if (UserName && Password) {
         const snapshot = await userCollection.where("UserName", "==", UserName).get();
         if (snapshot.empty) {
-          return res.status(404).json({ message: "User not found" });
+          return res.status(404).json(validateRes({
+            status: "Success",
+            message: "User not found"
+          }));
         }
 
         const userDoc = snapshot.docs[0];
         const userInfo = await transferFirestoreWithNestedReferences(userDoc);
         const isValid = await bcrypt.compare(Password, userInfo.Password);
         if (!isValid) {
-          return res.status(401).json({ message: "Incorrect password" });
+          return res.status(401).json(validateRes({
+            status: "Success",
+            message: "Incorrect password"
+          }));
         }
 
         sessionToken = await loginSessionController.generateNewSessionToken(userDoc);
@@ -119,7 +125,7 @@ const userController = {
           message: 'Success'
         }));
       } else {
-        res.status(401).json("Current password does not match")
+        res.status(401).json(validateRes({ status: "Success", message: "Current password does not match" }))
       }
     } catch (error) {
       res.status(500).json(error.message);
@@ -127,14 +133,20 @@ const userController = {
   },
 
   async updateUser(req, res) {
-    const { UserName, Email, DefaultCurrencyId } = req.body;
+    const { UserName, Email, DefaultCurrencyId,
+      TaskNotiMessage,
+      EnableUpdateNoti,
+      UpdateNotiMessage } = req.body;
     try {
       const { id } = req.params;
       const DefaultCurrency = await currencyCollection.doc(DefaultCurrencyId);
       const userInfo = {
         Email,
         UserName,
-        DefaultCurrency
+        DefaultCurrency,
+        TaskNotiMessage,
+        EnableUpdateNoti,
+        UpdateNotiMessage
       };
 
       await userCollection.doc(id).update(userInfo);
