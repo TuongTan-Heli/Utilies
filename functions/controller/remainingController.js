@@ -60,7 +60,11 @@ const remainingController = {
                     data: await transferFirestoreWithNestedReferences(LatestRemaining.docs[0])
                 }));
             } else {
-                res.status(404).json("No latest remaining")
+                res.status(200).send(validateRes({
+                    status: 'Success',
+                    message: 'Success',
+                    data: "No remaining found"
+                }));
             }
 
         } catch (error) {
