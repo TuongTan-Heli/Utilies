@@ -167,7 +167,7 @@ const recipeController = {
 
     async search(req, res) {
         const { key, userId } = req.body;
-        if (!key || !userId) {
+        if (!userId) {
             return res.status(400).send("Missing query param `q`");
         }
 
