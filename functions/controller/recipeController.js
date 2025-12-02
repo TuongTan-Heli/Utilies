@@ -142,7 +142,7 @@ const recipeController = {
 
             const recipeData = (await recipeCollection.doc(id).get()).data();
 
-            const stepDeleteTasks = recipeData.Steps.map(step => stepController.delete(step));
+            const stepDeleteTasks = recipeData.Steps.map(step => stepController.delete(step.id));
 
             await Promise.all(stepDeleteTasks);
 
