@@ -102,21 +102,29 @@ const recipeController = {
             const stepsToAdd = Steps.filter(s => !s.id);
 
             // Run changes in parallel
-            await Promise.all([
-                ...stepsToDelete.map(id => stepController.delete(id)),
+            const deletePromises = stepsToDelete.map(id => stepController.delete(id));
+            const updatePromises = stepsToUpdate.map(({ id: stepId, Recipe, ...fields }) =>
+                stepCollection.doc(stepId).update(fields)
+            );
 
-                ...stepsToUpdate.map(({ id: stepId, Recipe, ...fields }) =>
-                    stepCollection.doc(stepId).update(fields)
-                ),
+            await Promise.all([...deletePromises, ...updatePromises]);
+            
+            const addPromises = stepsToAdd.map(step =>
+                stepCollection.add({ ...step, Recipe: recipeRef })
+            );
 
-                ...stepsToAdd.map(step =>
-                    stepController.add({ ...step, Recipe: recipeRef })
-                )
-            ]);
+            const addedStepRefs = await Promise.all(addPromises);
 
-            // Re-fetch steps for updated recipe
-            const newStepsSnap = await stepCollection.where("Recipe", "==", recipeRef).get();
-            const newStepsRefs = newStepsSnap.docs.map(doc => doc.ref);
+            let addIndex = 0;
+            const newStepsRefs = Steps.map(s => {
+                if (s.id) {
+                    return stepCollection.doc(s.id);
+                } else {
+                    const ref = addedStepRefs[addIndex];
+                    addIndex++;
+                    return ref;
+                }
+            });
 
             // Update recipe with latest info
             await recipeRef.update({
