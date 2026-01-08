@@ -26,6 +26,7 @@ const {stepController} = require('./controller/stepController');
 const {stockInvestHisController} = require('./controller/stockInvestHisController');
 const {taskController} = require('./controller/taskController');
 const {budgetController} = require('./controller/budgetController');
+const {widgetController} = require('./controller/widgetController');
 
 const pathsToSkip = [
   { path: '/login', method: 'POST' },
@@ -100,6 +101,7 @@ app.post('/add-task', roleGuard(['User']), taskController.add);
 app.get('/get-all-task/:id', roleGuard(['User']), taskController.getAll);
 app.put('/update-task/:id', roleGuard(['User']), taskController.update);
 app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
+app.post('/mark-done/:id', roleGuard(['User']), taskController.markDone);
 //budget
 app.post('/add-budget', roleGuard(['User']), budgetController.add);
 app.get('/get-budget/:id', roleGuard(['User']), budgetController.get);
@@ -107,6 +109,10 @@ app.get('/get-latest-budget/:id', roleGuard(['User']), budgetController.getLates
 app.get('/get-all-budget/:id', roleGuard(['User']), budgetController.getAll);
 app.put('/update-budget/:id', roleGuard(['User']), budgetController.update);
 app.delete('/delete-budget/:id', roleGuard(['User']), budgetController.delete);
+
+//widget
+app.post('/widget-refresh', roleGuard(['Basic','User']), widgetController.refresh);
+app.post('/quick-add', roleGuard(['Basic','User']), widgetController.quickAdd);
 
 
 exports.app = functions.https.onRequest(app);

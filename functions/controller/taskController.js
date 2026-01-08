@@ -1,5 +1,5 @@
 const { db, Timestamp } = require('../config/firebase');
-const { transferFirestoreWithNestedReferences,validateRes } = require('../utils/utils');
+const { transferFirestoreWithNestedReferences, validateRes } = require('../utils/utils');
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
@@ -86,6 +86,40 @@ const taskController = {
         } catch (error) {
             res.status(500).json(error.message);
         }
+    },
+
+    async markDone(req, res) {
+        try {
+            const { id } = req.params;
+            const ref = taskCollection.doc(id);
+            const doc = await ref.get();
+
+            if (!doc.exists) {
+                return res.status(404).send(validateRes({
+                    status: 'Error',
+                    message: 'Task not found',
+                }));
+            }
+
+            const isDone = !!doc.data().Done;
+
+            await ref.update({
+                Done: isDone ? null : Timestamp.fromDate(new Date())
+            });
+
+            res.status(200).send(validateRes({
+                status: 'Success',
+                message: `Task marked as done/undone`,
+            }));
+
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(validateRes({
+                status: 'Error',
+                message: err.message ?? 'Internal server error',
+            }));
+        }
+
     },
 }
 

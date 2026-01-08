@@ -1,47 +1,78 @@
-export async function transferFirestoreWithNestedReferences(input) {
+export async function transferFirestoreWithNestedReferences(
+  input,
+  removedFields = []
+) {
   const items = Array.isArray(input) ? input : [input];
 
-  const result = await Promise.all(items.map(async (item) => {
-    const resolvedData = await resolveReferencesRecursively(item.data());
-    return {
-      id: item.id,
-      ...resolvedData,
-    };
-  }));
+  const results = await Promise.all(
+    items.map(async (doc) => {
+      const data = await resolveRecursively(
+        doc.data(),
+        new Set(removedFields)
+      );
 
-  return Array.isArray(input) ? result : result[0];
+      return {
+        id: doc.id,
+        ...data,
+      };
+    })
+  );
+
+  return Array.isArray(input) ? results : results[0];
 }
 
-async function resolveReferencesRecursively(obj) {
-  const result = Array.isArray(obj) ? [] : {};
+async function resolveRecursively(obj, removedFields, path = "") {
+  if (obj === null || obj === undefined) return obj;
 
-  for (const key in obj) {
-    const value = obj[key];
+  if (Array.isArray(obj)) {
+    return Promise.all(
+      obj.map(item =>
+        resolveRecursively(item, removedFields, path)
+      )
+    );
+  }
+
+  if (typeof obj !== "object") return obj;
+
+  const result = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const currentPath = path ? `${path}.${key}` : key;
+
+    if (removedFields.has(key) || removedFields.has(currentPath)) {
+      continue;
+    }
+
     if (isDocumentReference(value)) {
       try {
-        const refSnap = await value.get(); // or getDoc(value) for modular
-        if (refSnap.exists) {
-          result[key] = {
-            id: refSnap.id,
-            ...(await resolveReferencesRecursively(refSnap.data()))
-          };
-        } else {
-          result[key] = null;
-        }
-      } catch (error) {
-        console.warn(`Failed to resolve reference for field '${key}':`, error);
+        const snap = await value.get();
+        result[key] = snap.exists
+          ? {
+              id: snap.id,
+              ...(await resolveRecursively(
+                snap.data(),
+                removedFields,
+                currentPath
+              )),
+            }
+          : null;
+      } catch (e) {
+        console.warn(`Failed to resolve reference '${currentPath}'`, e);
         result[key] = null;
       }
-    } else if (value && typeof value === 'object') {
-      // Recurse through nested objects or arrays
-      result[key] = await resolveReferencesRecursively(value);
-    } else {
-      result[key] = value;
+      continue;
     }
+
+    result[key] = await resolveRecursively(
+      value,
+      removedFields,
+      currentPath
+    );
   }
 
   return result;
 }
+
 
 export function validateRes(obj) {
   if (Array.isArray(obj)) {
