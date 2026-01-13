@@ -12,34 +12,37 @@ const express = require("express");
 const app = express();
 const { skipForPaths } = require('./utils/utils.js');
 
-const {roleGuard} = require('./utils/roleGuard');
-const {apiKeyController} = require('./controller/apiKeyController');
-const {userController} = require('./controller/userController');
-const {currencyController} = require('./controller/currencyController');
-const {notificationController} = require('./controller/notificationController');
-const {recipeController} = require('./controller/recipeController');
-const {remainingController} = require('./controller/remainingController');
-const {reportController} = require('./controller/reportController');
-const {shareController} = require('./controller/shareController');
-const {spendingController} = require('./controller/spendingController');
-const {stepController} = require('./controller/stepController');
-const {stockInvestHisController} = require('./controller/stockInvestHisController');
-const {taskController} = require('./controller/taskController');
-const {budgetController} = require('./controller/budgetController');
-const {widgetController} = require('./controller/widgetController');
+const { roleGuard } = require('./utils/roleGuard');
+const { apiKeyController } = require('./controller/apiKeyController');
+const { userController } = require('./controller/userController');
+const { currencyController } = require('./controller/currencyController');
+const { notificationController } = require('./controller/notificationController');
+const { recipeController } = require('./controller/recipeController');
+const { remainingController } = require('./controller/remainingController');
+const { reportController } = require('./controller/reportController');
+const { shareController } = require('./controller/shareController');
+const { spendingController } = require('./controller/spendingController');
+const { stepController } = require('./controller/stepController');
+const { stockInvestHisController } = require('./controller/stockInvestHisController');
+const { taskController } = require('./controller/taskController');
+const { budgetController } = require('./controller/budgetController');
+const { widgetController } = require('./controller/widgetController');
 
 const pathsToSkip = [
   { path: '/login', method: 'POST' },
   { path: '/register', method: 'POST' },
+  { path: '/quick-add', method: 'POST' },
+  { path: '/widget-refresh', method: 'POST' },
+  { path: '/mark-done', method: 'POST', startsWith: true },
 ];
 
 
-app.use(skipForPaths(pathsToSkip, apiKeyController.validateApiKey)); 
+app.use(skipForPaths(pathsToSkip, apiKeyController.validateApiKey));
 
 
 //user
 app.post('/register', roleGuard(['Basic']), userController.register);
-app.post('/login', roleGuard(['Basic','User']), userController.login);
+app.post('/login', roleGuard(['Basic', 'User']), userController.login);
 app.put('/change-password/:id', roleGuard(['User']), userController.changePassword);
 app.delete('/delete-user/:id', roleGuard(['User']), userController.deleteUser);
 app.put('/update-user/:id', roleGuard(['User']), userController.updateUser);
@@ -101,7 +104,7 @@ app.post('/add-task', roleGuard(['User']), taskController.add);
 app.get('/get-all-task/:id', roleGuard(['User']), taskController.getAll);
 app.put('/update-task/:id', roleGuard(['User']), taskController.update);
 app.delete('/delete-task/:id', roleGuard(['User']), taskController.delete);
-app.post('/mark-done/:id', roleGuard(['User']), taskController.markDone);
+app.post('/mark-done/:id', roleGuard(['Basic', 'User']), taskController.markDone);
 //budget
 app.post('/add-budget', roleGuard(['User']), budgetController.add);
 app.get('/get-budget/:id', roleGuard(['User']), budgetController.get);
@@ -111,8 +114,8 @@ app.put('/update-budget/:id', roleGuard(['User']), budgetController.update);
 app.delete('/delete-budget/:id', roleGuard(['User']), budgetController.delete);
 
 //widget
-app.post('/widget-refresh', roleGuard(['Basic','User']), widgetController.refresh);
-app.post('/quick-add', roleGuard(['Basic','User']), widgetController.quickAdd);
+app.post('/widget-refresh', roleGuard(['Basic', 'User']), widgetController.refresh);
+app.post('/quick-add', roleGuard(['Basic', 'User']), widgetController.quickAdd);
 
 
 exports.app = functions.https.onRequest(app);

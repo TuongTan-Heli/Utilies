@@ -42,58 +42,106 @@ const userController = {
 
   async login(req, res) {
     const { UserName, Password, sessionToken: rawSessionToken } = req.body;
-    let sessionToken = rawSessionToken || "";
 
     try {
-      let userData = null;
-      let userId = null;
+      let userData;
+      let userId;
+      let sessionToken;
 
-      if (sessionToken) {
-        const sessionData = await loginSessionController.getDataFromSessionToken(sessionToken);
-        if (!sessionData?.sessionInfo?.User) {
-          return res.status(401).json(validateRes({ status: "Success", message: "Invalid or expired session" }));
+      /* =========================
+         1️⃣ SESSION LOGIN FIRST
+      ========================= */
+      if (rawSessionToken) {
+        const sessionData =
+          await loginSessionController.getDataFromSessionToken(rawSessionToken);
+
+        if (!sessionData || sessionData.isExpired) {
+          return res.status(401).json(
+            validateRes({
+              status: "Error",
+              message: "Session expired or invalid",
+            })
+          );
         }
 
         userData = sessionData.sessionInfo.User;
+        userId = sessionData.userId;
+
         sessionToken = {
           SessionToken: sessionData.sessionInfo.SessionToken,
           Expire: sessionData.sessionInfo.Expire,
         };
-        userId = sessionData.userId;
       }
 
+      /* =========================
+         2️⃣ USERNAME / PASSWORD
+      ========================= */
       else if (UserName && Password) {
-        const snapshot = await userCollection.where("UserName", "==", UserName).get();
+        const snapshot = await userCollection
+          .where("UserName", "==", UserName)
+          .limit(1)
+          .get();
+
         if (snapshot.empty) {
-          return res.status(404).json(validateRes({
-            status: "Success",
-            message: "User not found"
-          }));
+          return res.status(404).json(
+            validateRes({
+              status: "Error",
+              message: "User not found",
+            })
+          );
         }
 
         const userDoc = snapshot.docs[0];
         const userInfo = await transferFirestoreWithNestedReferences(userDoc);
+
         const isValid = await bcrypt.compare(Password, userInfo.Password);
         if (!isValid) {
-          return res.status(401).json(validateRes({
-            status: "Success",
-            message: "Incorrect password"
-          }));
+          return res.status(401).json(
+            validateRes({
+              status: "Error",
+              message: "Incorrect password",
+            })
+          );
         }
 
-        sessionToken = await loginSessionController.generateNewSessionToken(userDoc);
         userData = userInfo;
         userId = userDoc.id;
+
+        sessionToken =
+          await loginSessionController.generateNewSessionToken(userDoc);
       }
 
+      /* =========================
+         3️⃣ NO AUTH DATA
+      ========================= */
       else {
-        return res.status(400).json({ message: "Missing credentials or session token" });
+        return res.status(400).json(
+          validateRes({
+            status: "Error",
+            message: "Missing credentials or session token",
+          })
+        );
       }
 
-      // Generate or refresh API key
-      const apiKey = await apiKeyController.checkExpireOrGenerateApi(null, userCollection.doc(userId));
+      /* =========================
+         4️⃣ API KEY CHECK (AFTER AUTH)
+      ========================= */
+      const apikeyDocs = await db
+        .collection("ApiKey")
+        .where("User", "==", userCollection.doc(userId))
+        .limit(1)
+        .get();
+
+      const apiKey =
+        await apiKeyController.checkExpireOrGenerateApi(apikeyDocs.docs[0], 
+          userCollection.doc(userId)
+        );
+
       delete apiKey.User;
 
+      /* =========================
+         5️⃣ SUCCESS RESPONSE
+      ========================= */
       return res.status(200).json(
         validateRes({
           status: "Success",
@@ -105,9 +153,14 @@ const userController = {
       );
 
     } catch (error) {
-      return res.status(500).json({ status: "Error", message: error.message });
+      console.error("LOGIN ERROR:", error);
+      return res.status(500).json({
+        status: "Error",
+        message: "Internal server error",
+      });
     }
   },
+
 
   async changePassword(req, res) {
     const { OldPassword, NewPassword } = req.body;

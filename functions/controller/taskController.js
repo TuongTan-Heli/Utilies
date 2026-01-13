@@ -3,6 +3,7 @@ const { transferFirestoreWithNestedReferences, validateRes } = require('../utils
 const taskCollection = db.collection('Task');
 const userCollection = db.collection('User');
 const currencyCollection = db.collection('Currency');
+const { withAuth } = require('../utils/withAuth');
 
 const taskController = {
     async add(req, res) {
@@ -90,7 +91,12 @@ const taskController = {
 
     async markDone(req, res) {
         try {
+            const auth = await withAuth(req, res);
+            if (auth.error) return;
+
+            const { apiKey } = auth;
             const { id } = req.params;
+
             const ref = taskCollection.doc(id);
             const doc = await ref.get();
 
@@ -110,6 +116,7 @@ const taskController = {
             res.status(200).send(validateRes({
                 status: 'Success',
                 message: `Task marked as done/undone`,
+                apiKey,
             }));
 
         } catch (err) {

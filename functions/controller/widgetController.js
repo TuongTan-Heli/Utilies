@@ -1,30 +1,27 @@
-const { db } = require('../config/firebase');
+const { db, Timestamp } = require('../config/firebase');
 const taskCollection = db.collection('Task');
 const expenseCollection = db.collection('Spending');
-const { loginSessionController } = require('./loginSessionController');
 const { transferFirestoreWithNestedReferences, validateRes } = require('../utils/utils');
+const { withAuth } = require('../utils/withAuth');
 
 const widgetController = {
     async refresh(req, res) {
         try {
-            const { session } = req.body;
-            let user = null;
+            const auth = await withAuth(req, res);
+            if (auth.error) return;
 
-            const { success, userData } = await loginSessionController.getDataFromSessionToken(session);
-            if (!success) {
-                return res.status(401).json({ message: "Invalid session token or api key" });
-            }
-            user = await db.collection('User').doc(userData.id);
+            const { userRef, apiKey } = auth;
 
             const fromDate = new Date();
             fromDate.setDate(fromDate.getDate() - 31);
 
             const [tasksSnap, expenseSnap] = await Promise.all([
-                taskCollection.where("User", "==", user).get(),
+                taskCollection.where("User", "==", userRef).get(),
                 expenseCollection
-                    .where("User", "==", user)
+                    .where("User", "==", userRef)
                     .where("Date", ">=", fromDate)
-                    .get(),
+                    .orderBy("Date", "desc")
+                    .get()
             ]);
 
             const cookedTasks = await transferFirestoreWithNestedReferences(tasksSnap.docs, ["User", "Currency"]);
@@ -38,9 +35,10 @@ const widgetController = {
             }));
 
             res.status(200).send(validateRes({
-                status: 'Success',
-                message: 'Success',
-                data: cookedTasks.concat(cookedExpense)
+                status: "Success",
+                message: "Success",
+                data: cookedTasks.concat(cookedExpense),
+                apiKey,
             }));
         } catch (error) {
             res.status(500).json(error.message);
@@ -48,21 +46,17 @@ const widgetController = {
     },
     async quickAdd(req, res) {
         try {
-            const { session } = req.body;
-            let user = null;
+            const auth = await withAuth(req, res);
+            if (auth.error) return;
 
-            const { success, userData } = await loginSessionController.getDataFromSessionToken(session);
-            if (!success) {
-                return res.status(401).json({ message: "Invalid session token or api key" });
-            }
-            user = await db.collection('User').doc(userData.id);
-            const {Name, Price, Type, ExpenseType} = req.body;
+            const { userRef, userData, apiKey } = auth;
+            const { Name, Price, Type, ExpenseType, SelectedDate } = req.body;
             const currency = userData.DefaultCurrency ? await db.collection('Currency').doc(userData.DefaultCurrency.id) : null;
             switch (Type) {
                 case "To do":
                 case "To buy":
                     const taskInfo = {
-                        User: user,
+                        User: userRef,
                         Type: Type,
                         Deadline: null,
                         Description: "",
@@ -79,17 +73,23 @@ const widgetController = {
                     };
                     await taskCollection.add(taskInfo);
                     break;
-                case "Expense":
+                case "Expense": {
+                    const date =
+                        SelectedDate && !isNaN(new Date(SelectedDate))
+                            ? Timestamp.fromDate(new Date(SelectedDate))
+                            : Timestamp.fromDate(new Date());
+
                     const expenseInfo = {
-                        User: user,
+                        User: userRef,
                         Type: ExpenseType,
                         Amount: Price || 0,
                         Currency: currency,
-                        Date: new Date(),
+                        Date: date,
                         Description: "",
                     };
                     await expenseCollection.add(expenseInfo);
                     break;
+                }
                 default:
                     return res.status(400).json({ message: "Invalid Type" });
             }
@@ -97,6 +97,7 @@ const widgetController = {
             res.status(200).send(validateRes({
                 status: 'Success',
                 message: 'Success',
+                apiKey,
             }));
         } catch (error) {
             res.status(500).json(error.message);

@@ -109,11 +109,21 @@ function isDocumentReference(val) {
 
 export function skipForPaths(pathsToSkip, middleware) {
   return function (req, res, next) {
-    const match = pathsToSkip.some(
-      (path) =>
-        req.path === path.path &&
-        (!path.method || req.method.toLowerCase() === path.method.toLowerCase())
-    );
+    const match = pathsToSkip.some((p) => {
+      if (p.method && req.method.toLowerCase() !== p.method.toLowerCase()) {
+        return false;
+      }
+
+      if (p.regex) {
+        return p.regex.test(req.path);
+      }
+
+      if (p.startsWith) {
+        return req.path.startsWith(p.path);
+      }
+
+      return req.path === p.path;
+    });
 
     if (match) {
       req.role = "Basic";
