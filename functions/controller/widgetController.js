@@ -50,7 +50,7 @@ const widgetController = {
             if (auth.error) return;
 
             const { userRef, userData, apiKey } = auth;
-            const { Name, Price, Type, ExpenseType, SelectedDate, Description } = req.body;
+            const { Name, Price, Type, ExpenseType, SelectedDate, Note } = req.body;
             const currency = userData.DefaultCurrency ? await db.collection('Currency').doc(userData.DefaultCurrency.id) : null;
             switch (Type) {
                 case "To do":
@@ -85,7 +85,7 @@ const widgetController = {
                         Amount: Price || 0,
                         Currency: currency,
                         Date: date,
-                        Description,
+                        Note,
                     };
                     await expenseCollection.add(expenseInfo);
                     break;
